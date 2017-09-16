@@ -11,14 +11,11 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     files: [
-      {
-        pattern: './config/karma-test.js',
-        watched: false
-      }
+      'config/karma-test.js'
     ],
 
     preprocessors: {
-      './config/karma-test.js': ['webpack']
+      'config/karma-test.js': ['webpack']
     },
 
     webpack: webpackConfig,
@@ -39,6 +36,7 @@ module.exports = function (config) {
     ],
 
     reporters: ['spec'],
+
     specReporter: {
       maxLogLines: 5,
       suppressErrorSummary: true,

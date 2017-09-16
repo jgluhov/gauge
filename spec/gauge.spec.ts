@@ -1,4 +1,4 @@
-import Gauge from './gauge';
+import Gauge from '../src/gauge';
 
 describe('Gauge', () => {
 

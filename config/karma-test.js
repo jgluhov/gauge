@@ -1,2 +1,2 @@
-const appContext = require.context('../src', true, /\.spec\.ts/);
+const appContext = require.context('../spec', true, /\.spec\.ts/);
 appContext.keys().forEach(appContext);
