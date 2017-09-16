@@ -1,4 +1,4 @@
-const path = require('path'),
+const helper = require('./helper'),
   HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'awesome-typescript-loader',
         options: {
-          configFileName: path.resolve('tsconfig.json')
+          configFileName: helper.root('tsconfig.json')
         }
       }
     ],

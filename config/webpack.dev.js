@@ -1,4 +1,4 @@
-const path = require('path'),
+const helper = require('./helper'),
   commonConfig = require('./webpack.common'),
   webpackMerge = require('webpack-merge');
 
@@ -6,12 +6,12 @@ module.exports = webpackMerge(commonConfig, {
   devtool: 'inline-cheap-module-source-map',
 
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: helper.root('dist'),
     filename: 'bundle.js'
   },
 
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: helper.root('dist'),
     port: 3000,
     historyApiFallback: true,
     stats: 'minimal'

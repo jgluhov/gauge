@@ -6,6 +6,9 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "removeComments": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   }
 }
