@@ -21,11 +21,17 @@
   },
   "homepage": "https://github.com/jgluhov/gauge#readme",
   "devDependencies": {
+    "eslint-loader": "^1.9.0",
     "html-webpack-plugin": "^2.30.1",
     "path": "^0.12.7",
     "ts-loader": "^2.3.7",
+    "tslint": "^5.7.0",
+    "tslint-loader": "^3.5.3",
     "typescript": "^2.5.2",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.8.2"
+  },
+  "dependencies": {
+    "tslint-config-standard": "^6.0.1"
   }
 }

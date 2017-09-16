@@ -1,6 +1,6 @@
 class Gauge {
   constructor() {
-    console.log('GaugeJS')
+    console.log('GaugeJS');
   }
 }
 
