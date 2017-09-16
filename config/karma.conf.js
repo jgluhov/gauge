@@ -11,11 +11,17 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     files: [
-      'config/karma-test.js'
+      'spec/*.spec.ts'
     ],
 
     preprocessors: {
-      'config/karma-test.js': ['webpack']
+      'spec/*.spec.ts': ['webpack']
+    },
+
+    mime: {
+      'text/x-typescript': [
+        'ts'
+      ]
     },
 
     webpack: webpackConfig,
