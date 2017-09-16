@@ -3,9 +3,7 @@ type OBSERVED_ATTRIBUTES = string[];
 class Gauge extends HTMLElement {
 
   static get observedAttributes(): OBSERVED_ATTRIBUTES {
-    return [
-      'some'
-    ];
+    return [];
   }
 
   constructor() {
@@ -13,7 +11,6 @@ class Gauge extends HTMLElement {
   }
 
   private connectedCallback() {
-    console.log('Eahh we are here');
   }
 
   private attributeChangedCallback(
@@ -21,7 +18,6 @@ class Gauge extends HTMLElement {
     oldValue: string,
     newValue: string
   ) {
-    console.log(attr, oldValue, newValue);
   }
 }
 
