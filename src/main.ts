@@ -1,3 +1,3 @@
 import Gauge from './gauge';
 
-const gauge = new Gauge();
+window.customElements.define('app-gauge', Gauge);
