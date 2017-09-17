@@ -2,6 +2,8 @@ const karmaChromeLauncher = require('karma-chrome-launcher'),
   karmaSourceMapSupport = require('karma-source-map-support'),
   karmaJasmine = require('karma-jasmine'),
   karmaWebpack = require('karma-webpack'),
+  karmaFixture = require('karma-fixture'),
+  karmaHtml2JsPreprocessor = require('karma-html2js-preprocessor'),
   webpackConfig = require('./webpack.test');
 
 module.exports = {
@@ -9,7 +11,8 @@ module.exports = {
 
   frameworks: [
     'jasmine',
-    'source-map-support'
+    'source-map-support',
+    'fixture'
   ],
 
   mime: {
@@ -32,7 +35,9 @@ module.exports = {
     karmaWebpack,
     karmaJasmine,
     karmaChromeLauncher,
-    karmaSourceMapSupport
+    karmaSourceMapSupport,
+    karmaFixture,
+    karmaHtml2JsPreprocessor
   ],
 
   reporters: [],
