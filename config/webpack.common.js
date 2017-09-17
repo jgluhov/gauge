@@ -1,4 +1,5 @@
 const helper = require('./helper'),
+  ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -19,6 +20,14 @@ module.exports = {
         options: {
           configFileName: helper.root('tsconfig.json')
         }
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        loader: ExtractTextWebpackPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader?sourceMap'
+        })
       }
     ],
 
@@ -26,7 +35,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js', '.css']
   },
 
   plugins: [

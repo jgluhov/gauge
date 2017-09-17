@@ -1,6 +1,7 @@
 const webpack = require('webpack'),
   webpackMerge = require('webpack-merge'),
   BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin'),
+  ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'),
   helper = require('./helper'),
   commonConfig = require('./webpack.common');
 
@@ -22,5 +23,6 @@ module.exports = webpackMerge(commonConfig, {
         'ENV': JSON.stringify(ENV)
       }
     }),
+    new ExtractTextWebpackPlugin('[name].[hash].css')
   ]
 });

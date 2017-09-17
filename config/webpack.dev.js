@@ -1,5 +1,6 @@
 const helper = require('./helper'),
   commonConfig = require('./webpack.common'),
+  ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'),
   webpackMerge = require('webpack-merge');
 
 module.exports = webpackMerge(commonConfig, {
@@ -9,6 +10,10 @@ module.exports = webpackMerge(commonConfig, {
     path: helper.root('dist'),
     filename: 'bundle.js'
   },
+
+  plugins: [
+    new ExtractTextWebpackPlugin('[name].css')
+  ],
 
   devServer: {
     contentBase: helper.root('dist'),
