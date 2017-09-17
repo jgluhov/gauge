@@ -1,1 +1,1 @@
-module.exports = require('./config/karma.conf')
+module.exports = require('./config/karma.dev');
