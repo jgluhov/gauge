@@ -2,6 +2,8 @@ const webpackMerge = require('webpack-merge'),
   commonConfig = require('./webpack.common');
 
 module.exports = webpackMerge(commonConfig, {
+  entry: null,
+
   devtool: 'inline-source-map',
 
   module: {
@@ -15,6 +17,10 @@ module.exports = webpackMerge(commonConfig, {
         ],
         loader: 'istanbul-instrumenter-loader',
       },
+      {
+        test: /\.css$/,
+        loader: 'null-loader'
+      }
     ]
   }
 })

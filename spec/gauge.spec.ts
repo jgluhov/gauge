@@ -36,7 +36,7 @@ describe('Gauge', () => {
       });
 
       it('should contain svg element', () => {
-        expect(this.gaugeEl.shadowRoot.contains(this.gaugeEl.svgEl))
+        expect(this.gaugeEl.shadowRoot.contains(this.gaugeEl.el))
           .toBeTruthy();
       });
 
@@ -44,12 +44,9 @@ describe('Gauge', () => {
   });
 
   describe('SVG', () => {
-    it('should have namespace property', () => {
-      expect(this.gaugeEl.svgNS).toBeDefined();
-    });
 
     it('should have svg element property', () => {
-      expect(this.gaugeEl.svgEl).toBeDefined();
+      expect(this.gaugeEl.el).toBeDefined();
     });
 
     describe('#createSVGElement()', () => {
@@ -57,7 +54,7 @@ describe('Gauge', () => {
 
         it('should return SVGElement', () => {
           expect(this.gaugeEl.createSVGElement())
-            .toEqual(jasmine.any(SVGElement));
+            .toEqual(jasmine.any(Node));
         });
 
       });

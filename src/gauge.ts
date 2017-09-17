@@ -1,11 +1,9 @@
-type OBSERVED_ATTRIBUTES = string[];
-type NAMESPACE = string;
+import template from 'templates/gauge';
 
 class Gauge extends HTMLElement {
-  private svgNS: NAMESPACE = 'http://www.w3.org/2000/svg';
-  private svgEl: Element;
+  private el: Node;
 
-  static get observedAttributes(): OBSERVED_ATTRIBUTES {
+  static get observedAttributes(): string[] {
     return [];
   }
 
@@ -16,9 +14,9 @@ class Gauge extends HTMLElement {
       mode: 'open'
     });
 
-    this.svgEl = this.createSVGElement();
+    this.el = this.createSVGElement();
 
-    shadow.appendChild(this.svgEl);
+    shadow.appendChild(this.el);
   }
 
   private connectedCallback() {
@@ -35,11 +33,13 @@ class Gauge extends HTMLElement {
    * private createSVGElement - creates svg element
    * with certain namespaces to work with further.
    *
-   * @return {Element} svg element to display gauge
+   * @return {Node} svg element to display gauge
    */
-  private createSVGElement() {
-    const svgEl = document.createElementNS(this.svgNS, 'svg');
-    return svgEl;
+  private createSVGElement(): Node {
+    const templateEl = document.createElement('template');
+    templateEl.innerHTML = template;
+
+    return templateEl.content.firstElementChild.cloneNode(true);
   }
 }
 

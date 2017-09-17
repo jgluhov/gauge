@@ -28,6 +28,10 @@ module.exports = {
           fallback: 'style-loader',
           use: 'css-loader?sourceMap'
         })
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader?exportAsEs6Default'
       }
     ],
 
@@ -35,7 +39,11 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.js', '.css']
+    extensions: ['.ts', '.js', '.css', '.html'],
+
+    alias: {
+      templates: helper.root('src', 'templates')
+    }
   },
 
   plugins: [
