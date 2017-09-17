@@ -1,6 +1,9 @@
 type OBSERVED_ATTRIBUTES = string[];
+type NAMESPACE = string;
 
 class Gauge extends HTMLElement {
+  private svgNS: NAMESPACE = 'http://www.w3.org/2000/svg';
+  private svgEl: Element;
 
   static get observedAttributes(): OBSERVED_ATTRIBUTES {
     return [];
@@ -12,6 +15,10 @@ class Gauge extends HTMLElement {
     const shadow = this.attachShadow({
       mode: 'open'
     });
+
+    this.svgEl = this.createSVGElement();
+
+    shadow.appendChild(this.svgEl);
   }
 
   private connectedCallback() {
@@ -22,6 +29,11 @@ class Gauge extends HTMLElement {
     oldValue: string,
     newValue: string
   ) {
+  }
+
+  private createSVGElement() {
+    const svgEl = document.createElementNS(this.svgNS, 'svg');
+    return svgEl;
   }
 }
 

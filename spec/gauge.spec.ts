@@ -35,8 +35,32 @@ describe('Gauge', () => {
         expect(this.gaugeEl.shadowRoot).not.toBeNull();
       });
 
-    });
+      it('should contain svg element', () => {
+        expect(this.gaugeEl.shadowRoot.contains(this.gaugeEl.svgEl))
+          .toBeTruthy();
+      });
 
+    });
   });
 
+  describe('SVG', () => {
+    it('should have namespace property', () => {
+      expect(this.gaugeEl.svgNS).toBeDefined();
+    });
+
+    it('should have svg element property', () => {
+      expect(this.gaugeEl.svgEl).toBeDefined();
+    });
+
+    describe('#createSVGElement()', () => {
+      describe('when its called', () => {
+
+        it('should return SVGElement', () => {
+          expect(this.gaugeEl.createSVGElement())
+            .toEqual(jasmine.any(SVGElement));
+        });
+
+      });
+    });
+  });
 });
