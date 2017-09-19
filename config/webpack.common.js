@@ -44,11 +44,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.js', '.css', '.html'],
-
-    alias: {
-      templates: helper.root('src', 'templates')
-    }
+    extensions: ['.ts', '.js', '.css', '.html']
   },
 
   plugins: [
