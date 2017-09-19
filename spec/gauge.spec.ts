@@ -1,4 +1,4 @@
-import Gauge from '../src/gauge';
+import Gauge from '../src/gauge/gauge';
 
 declare const fixture;
 
@@ -33,11 +33,6 @@ describe('Gauge', () => {
 
       it('should create shadow dom', () => {
         expect(this.gaugeEl.shadowRoot).not.toBeNull();
-      });
-
-      it('should contain svg element', () => {
-        expect(this.gaugeEl.shadowRoot.contains(this.gaugeEl.el))
-          .toBeTruthy();
       });
 
     });

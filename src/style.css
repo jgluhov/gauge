@@ -11,6 +11,12 @@ body {
 }
 
 .container {
-  height: 70vh;
-  width: 60vw;
+  height: 280px;
+  outline: 1px solid #dcdcdc;
+  width: 480px;
+}
+
+app-gauge {
+  display: block;
+  height: 100%;
 }

@@ -1,4 +1,5 @@
-import template from 'templates/gauge';
+import style = require('./gauge.css');
+import template from './gauge.html';
 
 class Gauge extends HTMLElement {
   private el: Node;
@@ -36,10 +37,17 @@ class Gauge extends HTMLElement {
    * @return {Node} svg element to display gauge
    */
   private createSVGElement(): Node {
-    const templateEl = document.createElement('template');
-    templateEl.innerHTML = template;
+    const templateEl = document.createElement('template'),
+      styleEl = document.createElement('style'),
+      content = document.createDocumentFragment();
 
-    return templateEl.content.firstElementChild.cloneNode(true);
+    templateEl.innerHTML = template;
+    styleEl.innerHTML = style;
+
+    content.appendChild(styleEl);
+    content.appendChild(templateEl.content);
+
+    return content;
   }
 }
 
