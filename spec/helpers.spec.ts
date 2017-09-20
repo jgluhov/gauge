@@ -64,4 +64,83 @@ describe('Helpers', () => {
 
   });
 
+  describe('#describeArc()', () => {
+    describe('when called without params', () => {
+      it('should return zero path', () => {
+        expect(helpers.describeArc())
+          .toEqual(jasmine.any(String));
+      });
+    });
+
+    describe('when called with params', () => {
+
+      describe('when called with specified starting point', () => {
+        beforeEach(() => {
+          this.arc = helpers.describeArc(0, 0);
+        });
+
+        it('should return correct arc string', () => {
+          expect(/^M 0 0.*/.test(this.arc))
+            .toBeTruthy();
+        });
+      });
+
+      describe('when called with specified radius', () => {
+        beforeEach(() => {
+          this.arc = helpers.describeArc(0, 0, 5);
+        });
+
+        it('should return correct arc string', () => {
+          expect(/^M \d+ \d+ A 5 5.*/.test(this.arc))
+            .toBeTruthy();
+        });
+      });
+
+      describe('when arc is less then 180 degree', () => {
+        beforeEach(() => {
+          this.startAngle = 0;
+          this.endAngle = Math.PI / 2;
+          this.arc = helpers.describeArc(
+            0, 0, 5, this.startAngle, this.endAngle
+          );
+        });
+
+        it('should set arc flag to zero', () => {
+          expect(/^M \d+ \d+ A \d+ \d+ \d+ 0.*/.test(this.arc))
+            .toBeTruthy();
+        });
+      });
+
+      describe('when arc is more then 180 degree', () => {
+        beforeEach(() => {
+          this.startAngle = 0;
+          this.endAngle = Math.PI;
+          this.arc = helpers.describeArc(
+            0, 0, 5, this.startAngle, this.endAngle
+          );
+        });
+
+        it('should set arc flag to zero', () => {
+          expect(/^M \d+ \d+ A \d+ \d+ \d+ 1.*/.test(this.arc))
+            .toBeTruthy();
+        });
+      });
+
+      describe('when called with specified radius and angles', () => {
+        beforeEach(() => {
+          this.startAngle = 0;
+          this.endAngle = 2 * Math.PI;
+          this.arc = helpers.describeArc(
+            0, 0, 5, this.startAngle, this.endAngle
+          );
+        });
+
+        // it('should set end point correctly', () => {
+        //   expect(/^M \d+ \d+ A \d+ \d+ \d+ \d+ 5 0$/.test(this.arc))
+        //     .toBeTruthy();
+        // });
+      });
+
+    });
+  });
 });
