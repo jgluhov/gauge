@@ -15,8 +15,3 @@ body {
   outline: 1px solid #dcdcdc;
   width: 480px;
 }
-
-app-gauge {
-  display: block;
-  height: 100%;
-}
