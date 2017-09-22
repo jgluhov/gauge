@@ -9,8 +9,8 @@ export function polarToCartesian(
 ): Point {
 
   return new Point(
-    centerX + radius * Math.cos(angle),
-    centerY + radius * Math.sin(angle)
+    centerX + multiply(radius * Math.cos(angle)),
+    centerY + multiply(radius * Math.sin(angle))
   );
 }
 
@@ -34,6 +34,24 @@ export function describeArc(
   return d;
 }
 
+export function isEpsilon(n: number = 0): boolean {
+  return Math.abs(n) < 1e-10;
+}
+
+export function formatNumber(n: number = 0): number {
+  return isEpsilon(n) ? 0 : n;
+}
+
+export function multiply(...numbers): number {
+  const formattedNumbers = numbers.map(formatNumber),
+    factor = correctionFactor(formattedNumbers);
+
+  return formattedNumbers.map(formatNumber)
+    .reduce((x, y) => {
+      return (x * factor) * (y * factor) / (factor * factor);
+    }, 1);
+}
+
 export function multiplier(x: number): number {
   const parts = x.toString().split('.');
 
@@ -43,3 +61,18 @@ export function multiplier(x: number): number {
 
   return Math.pow(10, parts[1].length);
 }
+
+export function correctionFactor(...numbers): number {
+  return numbers.reduce((prev: number, next: number) => {
+    const mp = multiplier(prev),
+        mn = multiplier(next);
+
+    return Math.max(mp, mn);
+  }, 1);
+}
+
+/**
+ * TODO: need to realize converting from
+ * scientific format of number to decimal one
+ * like this https://gist.github.com/jiggzson/b5f489af9ad931e3d186
+ */
