@@ -36,6 +36,7 @@ class Gauge extends HTMLElement {
    *
    * @return {Node} svg element to display gauge
    */
+   // TODO: need to move into SVGService
   private createSVGElement(): Node {
     const templateEl = document.createElement('template'),
       styleEl = document.createElement('style'),
