@@ -16,7 +16,6 @@ describe('SVG Service', () => {
     });
 
     describe('when called with params', () => {
-
       describe('when set center point ot zero', () => {
         describe('when we specify radius and angle', () => {
           beforeEach(() => {
@@ -123,7 +122,7 @@ describe('SVG Service', () => {
         });
       });
 
-      describe('when called with specified radius and angles', () => {
+      describe('when called with specified radius and angles once', () => {
         beforeEach(() => {
           this.startAngle = 0;
           this.endAngle = 2 * Math.PI;
@@ -133,11 +132,25 @@ describe('SVG Service', () => {
         });
 
         it('should set end point correctly', () => {
-          expect(/^M \d+ \d+ A \d+ \d+ \d+ \d+ 5 0$/.test(this.arc))
+          expect(/^M \d+ \d+ A \d+ \d+ \d+ \d+ \d+ 5 0$/.test(this.arc))
             .toBeTruthy();
         });
       });
 
+      describe('when called with specified radius and angles twice', () => {
+        beforeEach(() => {
+          this.startAngle = 0;
+          this.endAngle = Math.PI;
+          this.arc = SVGService.describeArc(
+            140, 470, 130, this.startAngle, this.endAngle
+          );
+        });
+
+        it('should set end point correctly', () => {
+          expect(/^M 270 470 A 130 130 0 1 0 10 470$/.test(this.arc))
+            .toBeTruthy();
+        });
+      });
     });
   });
 });

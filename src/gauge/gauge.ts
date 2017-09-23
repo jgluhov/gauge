@@ -1,8 +1,10 @@
+import SVGService from '../services/svg-service';
 import style = require('./gauge.css');
 import template from './gauge.html';
 
 class Gauge extends HTMLElement {
-  private el: Node;
+  private root: DocumentFragment;
+  private svgEl: SVGElement;
 
   static get observedAttributes(): string[] {
     return [];
@@ -15,9 +17,12 @@ class Gauge extends HTMLElement {
       mode: 'open'
     });
 
-    this.el = this.createSVGElement();
+    this.root = this.createShadowRoot();
+    this.svgEl = this.root.querySelector('svg');
 
-    shadow.appendChild(this.el);
+    this.render();
+
+    shadow.appendChild(this.root);
   }
 
   private connectedCallback() {
@@ -30,14 +35,19 @@ class Gauge extends HTMLElement {
   ) {
   }
 
+  private render() {
+    this.gaugeScaleEl.setAttribute(
+      'd', SVGService.describeArc(240, 270, 230, 0, Math.PI)
+    );
+  }
+
   /**
-   * private createSVGElement - creates svg element
+   * private createShadowRoot - creates svg element
    * with certain namespaces to work with further.
    *
    * @return {Node} svg element to display gauge
    */
-   // TODO: need to move into SVGService
-  private createSVGElement(): Node {
+  private createShadowRoot = (): DocumentFragment => {
     const templateEl = document.createElement('template'),
       styleEl = document.createElement('style'),
       content = document.createDocumentFragment();
@@ -49,6 +59,10 @@ class Gauge extends HTMLElement {
     content.appendChild(templateEl.content);
 
     return content;
+  }
+
+  private get gaugeScaleEl() {
+    return this.svgEl.querySelector('.gauge__scale');
   }
 }
 

@@ -16,7 +16,7 @@ class SVGService {
 
     const d = [
       'M', start.x, start.y,
-      'A', radius, radius, 0, largeArcFlag, end.x, end.y
+      'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
     ].join(' ');
 
     return d;
