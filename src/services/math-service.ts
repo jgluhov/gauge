@@ -49,7 +49,7 @@ class MathService {
 
   public normalizeAngle = (angle) => angle % (2 * Math.PI);
 
-  public calculateSegments = (
+  public calculateArcSegments = (
     startAngle: number = 0,
     endAngle: number = 0,
     ratio: number[]

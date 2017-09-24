@@ -184,12 +184,12 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#calculateSegments()', () => {
+  describe('#calculateArcSegments()', () => {
     describe('when called with params', () => {
       describe('when passed more then 180 degree', () => {
         describe('when starting point is negative', () => {
           beforeEach(() => {
-            this.segments = mathService.calculateSegments(
+            this.segments = mathService.calculateArcSegments(
               - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
             );
           });
@@ -199,46 +199,102 @@ describe('Math Service', () => {
               this.segment = this.segments[0];
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct startAngle of first endpoint', () => {
               expect(this.segment.startAngle)
                 .toBeCloseTo(- Math.PI / 6);
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct endAngle of first endpoint', () => {
               expect(this.segment.endAngle)
                 .toBeCloseTo(23 * Math.PI / 30);
             });
           });
 
-          describe('checking first segment', () => {
+          describe('checking second segment', () => {
             beforeEach(() => {
               this.segment = this.segments[1];
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct startAngle of first endpoint', () => {
               expect(this.segment.startAngle)
                 .toBeCloseTo(23 * Math.PI / 30);
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct endAngle of first endpoint', () => {
               expect(this.segment.endAngle)
                 .toBeCloseTo(29 * Math.PI / 30);
             });
           });
 
-          describe('checking first segment', () => {
+          describe('checking third segment', () => {
             beforeEach(() => {
               this.segment = this.segments[2];
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct startAngle of first endpoint', () => {
               expect(this.segment.startAngle)
                 .toBeCloseTo(29 * Math.PI / 30);
             });
 
-            it('should return correct first endpoint', () => {
+            it('should return correct endAngle of first endpoint', () => {
               expect(this.segment.endAngle)
                 .toBeCloseTo(7 * Math.PI / 6);
+            });
+          });
+        });
+
+        describe('when starting point is positive (reverting)', () => {
+          beforeEach(() => {
+            this.segments = mathService.calculateArcSegments(
+              7 * Math.PI / 6, - Math.PI / 6, [ 70, 85, 100 ]
+            );
+          });
+
+          describe('checking first segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[0];
+            });
+
+            it('should return correct startAngle of first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(7 * Math.PI / 6);
+            });
+
+            it('should return correct endAngle of first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(7 * Math.PI / 30);
+            });
+          });
+
+          describe('checking second segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[1];
+            });
+
+            it('should return correct startAngle of first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(7 * Math.PI / 30);
+            });
+
+            it('should return correct endAngle of first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(Math.PI / 30);
+            });
+          });
+
+          describe('checking third segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[2];
+            });
+
+            it('should return correct startAngle of first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(Math.PI / 30);
+            });
+
+            it('should return correct endAngle of first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(- Math.PI / 6);
             });
           });
         });
@@ -296,5 +352,5 @@ describe('Math Service', () => {
         });
       });
     });
-  })
+  });
 });

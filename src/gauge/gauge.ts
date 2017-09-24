@@ -47,13 +47,13 @@ class Gauge extends HTMLElement {
     const elements = [].slice.call(
       this.gaugeScaleGroupEl.querySelectorAll('polyline')
     ),
-      segments = mathService.calculateSegments(
+      arcSegments = mathService.calculateArcSegments(
         constants.GAUGE_SCALE_START_ANGLE,
         constants.GAUGE_SCALE_END_ANGLE,
         constants.GAUGE_SCALE_RATIO
       );
 
-    const parts = arrayUtil.zip(elements, segments);
+    const parts = arrayUtil.zip(elements, arcSegments);
 
     parts.forEach((part) => {
       const polylineEl = part.shift() as SVGPolylineElement,
@@ -61,7 +61,7 @@ class Gauge extends HTMLElement {
 
       polylineEl.setAttribute(
         'points', SVGService.generateArc(
-          240, 100, 150, segment.startAngle, segment.endAngle
+          240, 115, 170, segment.startAngle, segment.endAngle
         )
       );
     });

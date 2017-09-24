@@ -2,12 +2,26 @@
   display: block;
   height: 100%;
 }
-#gauge {
+
+.gauge {
   transform-origin: 50% 50%;
   transform: scale(1,-1);
 }
-#gauge-scale {
-  fill: #fff;
-  stroke: url(#gauge-scale-grad);
+
+.gauge__scale {
+  fill: none;
   stroke-width: 4;
+  stroke-linecap: square;
+}
+
+.gauge__scale-grey {
+  stroke: #535353;
+}
+
+.gauge__scale-orange {
+  stroke: #fd9409;
+}
+
+.gauge__scale-red {
+  stroke: #fb000e;
 }
