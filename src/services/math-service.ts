@@ -55,18 +55,18 @@ class MathService {
     ratio: number[]
   ) => {
     const segments = [],
-      totalInterval = this.calculateInterval(startAngle, endAngle),
-      calculateStep = this.calculateStep.bind(this, totalInterval),
-      stepSign = Math.sign(endAngle - startAngle);
+      interval = this.calculateInterval(startAngle, endAngle),
+      calcStep = this.calculateStep.bind(this, interval),
+      sign = Math.sign(endAngle - startAngle);
 
-    for (let index = 0; index < utilService.size(ratio); index++) {
-      const prevStep = ratio[index - 1] ?
-        calculateStep(ratio[index - 1]) : 0,
-        step = calculateStep(ratio[index]) - prevStep,
-        start = segments[index - 1] ?
-          segments[index - 1].endAngle : startAngle;
+    let index,
+      start = startAngle
 
-      const segment = new Segment(start, start + (stepSign * step));
+    for (index = 0; index < utilService.size(ratio); index++) {
+      const step = calcStep(ratio[index]) - (calcStep(ratio[index - 1]) || 0);
+
+      const segment = new Segment(start, start + (sign * step));
+      start = segment.endAngle;
 
       segments.push(segment);
     }
