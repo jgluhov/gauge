@@ -10,7 +10,6 @@ describe('Gauge', () => {
   beforeEach(() => {
     fixture.load('gauge.fixture.html');
     this.gaugeEl = fixture.el.firstChild;
-    this.gaugeScaleEl = this.gaugeEl.shadowRoot.querySelector('.gauge__scale');
   });
 
   describe('Observe Attributes', () => {
@@ -21,6 +20,20 @@ describe('Gauge', () => {
     describe('when read observeAttributes property', () => {
       it('should return array', () => {
         expect(Gauge.observedAttributes).toEqual(jasmine.any(Array));
+      });
+    });
+  });
+
+  xdescribe('getter gaugeScaleEl', () => {
+    describe('when read gaugeScaleEl property', () => {
+      it('should return element', () => {
+        expect(this.gaugeEl.gaugeScaleEl)
+          .toEqual(jasmine.any(Element));
+      });
+
+      it('should return element with correct id', () => {
+        expect(this.gaugeEl.gaugeScaleEl.id)
+          .toBe('gauge-scale');
       });
     });
   });
@@ -47,14 +60,14 @@ describe('Gauge', () => {
       });
     });
 
-    describe('#render()', () => {
+    xdescribe('#render()', () => {
       describe('when called', () => {
         beforeEach(() => {
           this.gaugeEl.render();
-          this.gaugeScalePath = this.gaugeScaleEl.getAttribute('d');
-        })
+        });
+
         it('should draw scale path', () => {
-          expect(this.gaugeScalePath).not.toBe('');
+          expect(this.gaugeEl.gaugeScaleEl.getAttribute('d')).not.toBe('');
         });
       });
     });

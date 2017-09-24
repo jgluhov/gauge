@@ -1,4 +1,8 @@
+import * as constants from '../constants';
+import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
+import Endpoint from '../structures/endpoint';
+import utilService from '../utils/array-service';
 import style = require('./gauge.css');
 import template from './gauge.html';
 
@@ -36,16 +40,35 @@ class Gauge extends HTMLElement {
   }
 
   private render() {
-    this.gaugeScaleEl.setAttribute(
-      'd', SVGService.describeArc(240, 270, 230, 0, Math.PI)
-    );
+    this.renderScale();
+  }
+
+  private renderScale() {
+    const elements = [].slice.call(this.gaugeScaleGroupEl.querySelectorAll('polyline')),
+      segments = mathService.calculateSegments(
+        constants.GAUGE_SCALE_START_ANGLE,
+        constants.GAUGE_SCALE_END_ANGLE,
+        constants.GAUGE_SCALE_RATIO
+      );
+
+    const parts = utilService.zip(elements, segments);
+    parts.forEach((part) => {
+      const polyline = part.shift() as SVGPolylineElement,
+        endpoint = part.shift() as Endpoint;
+
+      polyline.setAttribute(
+        'points', SVGService.generateArc(
+          240, 100, 150, endpoint.startAngle, endpoint.endAngle
+        )
+      );
+    });
   }
 
   /**
    * private createShadowRoot - creates svg element
    * with certain namespaces to work with further.
    *
-   * @return {Node} svg element to display gauge
+   * @return {DocumentFragment} svg  / 4lement to display gauge
    */
   private createShadowRoot = (): DocumentFragment => {
     const templateEl = document.createElement('template'),
@@ -61,8 +84,8 @@ class Gauge extends HTMLElement {
     return content;
   }
 
-  private get gaugeScaleEl() {
-    return this.svgEl.querySelector('.gauge__scale');
+  private get gaugeScaleGroupEl() {
+    return this.svgEl.querySelector('#gauge-scale-group');
   }
 }
 

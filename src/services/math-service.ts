@@ -1,3 +1,5 @@
+import Endpoint from '../structures/endpoint';
+
 class MathService {
   public multiply(...numbers): number {
     const formattedNumbers = numbers.map(this.formatNumber),
@@ -34,6 +36,36 @@ class MathService {
 
   public formatNumber = (n: number = 0): number => {
     return this.isEpsilon(n) ? 0 : n;
+  }
+
+  public isGreaterOrEqual = (
+    comparator: number = 0,
+    startAngle: number = 0,
+    endAngle: number = 0
+  ): boolean => {
+    return (Math.PI <= (Math.abs(endAngle - startAngle)));
+  }
+
+  public normalizeAngle = (angle) => angle % (2 * Math.PI);
+
+  public calculateSegments = (
+    startAngle: number = 0,
+    endAngle: number = 0,
+    ratio: number[]
+  ) => {
+    const totalAngle = Math.abs(startAngle) + Math.abs(endAngle);
+
+    return ratio.reduce(
+      (endpoints: Endpoint[], percent, index: number) => {
+      const prevEndpoint = endpoints.slice().pop(),
+        prevAngle = prevEndpoint ? prevEndpoint.endAngle : startAngle,
+        stepAngle = (totalAngle * (percent / 100));
+
+      return [
+        ...endpoints,
+        new Endpoint(prevAngle, prevAngle + stepAngle)
+      ];
+    }, []);
   }
 
   /**

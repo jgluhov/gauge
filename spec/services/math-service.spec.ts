@@ -152,4 +152,35 @@ describe('Math Service', () => {
       });
     });
   });
+
+  describe('#isGreaterOrEqual()', () => {
+    describe('when called without params', () => {
+      it('should return false', () => {
+        expect(mathService.isGreaterOrEqual()).toBeFalsy();
+      });
+    });
+
+    describe('when called with params', () => {
+      describe('when angle is greater then 180 degree', () => {
+        it('should return true', () => {
+          expect(mathService.isGreaterOrEqual(Math.PI, 0, 3 * Math.PI / 2))
+            .toBeTruthy();
+        });
+      });
+
+      describe('when angle is less then 180 degree', () => {
+        it('should return true', () => {
+          expect(mathService.isGreaterOrEqual(Math.PI, 0, Math.PI / 2))
+            .toBeFalsy();
+        });
+      });
+
+      describe('when angle is equal 180 degree', () => {
+        it('should return true', () => {
+          expect(mathService.isGreaterOrEqual(Math.PI, 0, Math.PI))
+            .toBeTruthy();
+        });
+      });
+    });
+  });
 });

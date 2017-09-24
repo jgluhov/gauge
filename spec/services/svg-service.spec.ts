@@ -1,5 +1,5 @@
 import SVGService from '../../src/services/svg-service';
-import { Point } from '../../src/structures';
+import Point from '../../src/structures/point';
 
 describe('SVG Service', () => {
   describe('#polarToCartesian()', () => {

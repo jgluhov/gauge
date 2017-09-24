@@ -2,9 +2,12 @@
   display: block;
   height: 100%;
 }
-
-.gauge__scale {
+#gauge {
+  transform-origin: 50% 50%;
+  transform: scale(1,-1);
+}
+#gauge-scale {
   fill: #fff;
-  stroke: rgb(255,0,0);
-  stroke-width: 2;
+  stroke: url(#gauge-scale-grad);
+  stroke-width: 4;
 }

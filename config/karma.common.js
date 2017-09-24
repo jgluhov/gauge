@@ -24,7 +24,8 @@ module.exports = {
   webpack: webpackConfig,
 
   webpackMiddleware: {
-    stats: 'errors-only'
+    stats: 'errors-only',
+    noInfo: true
   },
 
   webpackServer: {
