@@ -1,10 +1,10 @@
-import arrayService from '../../src/utils/array-service';
+import arrayUtil from '../../src/utils/array-util';
 
 describe('Array Service', () => {
   describe('#zip()', () => {
     describe('when called without params', () => {
       it('should return empty array', () => {
-        expect(arrayService.zip()).toEqual([]);
+        expect(arrayUtil.zip()).toEqual([]);
       });
     });
 
@@ -15,7 +15,7 @@ describe('Array Service', () => {
       });
 
       it('should return correct zipped array', () => {
-        expect(arrayService.zip(this.firstArray))
+        expect(arrayUtil.zip(this.firstArray))
           .toEqual([[1], [2]]);
       });
     });
@@ -27,8 +27,23 @@ describe('Array Service', () => {
       });
 
       it('should return correct zipped array', () => {
-        expect(arrayService.zip(this.firstArray, this.secondArray))
+        expect(arrayUtil.zip(this.firstArray, this.secondArray))
           .toEqual([[1, 1], [2, 2]]);
+      });
+    });
+  });
+
+  describe('#size()', () => {
+    describe('when called without params', () => {
+      it('should return zero', () => {
+        expect(arrayUtil.size()).toEqual(0);
+      });
+    });
+
+    describe('when called with params', () => {
+      it('should return zero', () => {
+        expect(arrayUtil.size([1, 2, 3]))
+          .toEqual(3);
       });
     });
   });

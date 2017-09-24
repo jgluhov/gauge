@@ -4,7 +4,7 @@ const helper = require('./helper'),
   webpackMerge = require('webpack-merge');
 
 module.exports = webpackMerge(commonConfig, {
-  devtool: 'inline-cheap-module-source-map',
+  devtool: 'inline-source-map',
 
   output: {
     path: helper.root('dist'),

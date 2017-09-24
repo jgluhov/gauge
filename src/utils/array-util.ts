@@ -1,4 +1,4 @@
-class ArrayService<T> {
+class ArrayUtil<T> {
   public zip = (...args: T[][]): T[][]  => {
     if (!args.length) {
       return args;
@@ -12,6 +12,10 @@ class ArrayService<T> {
       (_, i: number) => args.map((array: T[]) => array[i])
     );
   }
+
+  public size = (array: any[] = []): number => {
+    return array.length;
+  }
 }
 
-export default new ArrayService();
+export default new ArrayUtil();

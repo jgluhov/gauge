@@ -1,4 +1,5 @@
-import Endpoint from '../structures/endpoint';
+import Segment from '../structures/segment';
+import utilService from '../utils/array-util';
 
 class MathService {
   public multiply(...numbers): number {
@@ -53,19 +54,41 @@ class MathService {
     endAngle: number = 0,
     ratio: number[]
   ) => {
-    const totalAngle = Math.abs(startAngle) + Math.abs(endAngle);
+    const segments = [],
+      totalInterval = this.calculateInterval(startAngle, endAngle),
+      calculateStep = this.calculateStep.bind(this, totalInterval),
+      stepSign = Math.sign(endAngle - startAngle);
 
-    return ratio.reduce(
-      (endpoints: Endpoint[], percent, index: number) => {
-      const prevEndpoint = endpoints.slice().pop(),
-        prevAngle = prevEndpoint ? prevEndpoint.endAngle : startAngle,
-        stepAngle = (totalAngle * (percent / 100));
+    for (let index = 0; index < utilService.size(ratio); index++) {
+      const prevStep = ratio[index - 1] ?
+        calculateStep(ratio[index - 1]) : 0,
+        step = calculateStep(ratio[index]) - prevStep,
+        start = segments[index - 1] ?
+          segments[index - 1].endAngle : startAngle;
 
-      return [
-        ...endpoints,
-        new Endpoint(prevAngle, prevAngle + stepAngle)
-      ];
-    }, []);
+      const segment = new Segment(start, start + (stepSign * step));
+
+      segments.push(segment);
+    }
+
+    return segments;
+  }
+
+  public calculateStep = (
+    total: number = 0,
+    percent: number = 0
+  ): number => {
+    return total * percent / 100;
+  }
+
+  public calculateInterval = (
+    startAngle: number = 0,
+    endAngle: number = 0
+  ): number => {
+    const start = this.normalizeAngle(startAngle),
+      end = this.normalizeAngle(endAngle);
+
+    return start < end ? end - start : start - end;
   }
 
   /**

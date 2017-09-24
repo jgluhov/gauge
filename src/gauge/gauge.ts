@@ -1,8 +1,8 @@
 import * as constants from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
-import Endpoint from '../structures/endpoint';
-import utilService from '../utils/array-service';
+import Segment from '../structures/segment';
+import arrayUtil from '../utils/array-util';
 import style = require('./gauge.css');
 import template from './gauge.html';
 
@@ -44,21 +44,24 @@ class Gauge extends HTMLElement {
   }
 
   private renderScale() {
-    const elements = [].slice.call(this.gaugeScaleGroupEl.querySelectorAll('polyline')),
+    const elements = [].slice.call(
+      this.gaugeScaleGroupEl.querySelectorAll('polyline')
+    ),
       segments = mathService.calculateSegments(
         constants.GAUGE_SCALE_START_ANGLE,
         constants.GAUGE_SCALE_END_ANGLE,
         constants.GAUGE_SCALE_RATIO
       );
 
-    const parts = utilService.zip(elements, segments);
-    parts.forEach((part) => {
-      const polyline = part.shift() as SVGPolylineElement,
-        endpoint = part.shift() as Endpoint;
+    const parts = arrayUtil.zip(elements, segments);
 
-      polyline.setAttribute(
+    parts.forEach((part) => {
+      const polylineEl = part.shift() as SVGPolylineElement,
+        segment = part.shift() as Segment;
+
+      polylineEl.setAttribute(
         'points', SVGService.generateArc(
-          240, 100, 150, endpoint.startAngle, endpoint.endAngle
+          240, 100, 150, segment.startAngle, segment.endAngle
         )
       );
     });

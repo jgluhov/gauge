@@ -183,4 +183,118 @@ describe('Math Service', () => {
       });
     });
   });
+
+  describe('#calculateSegments()', () => {
+    describe('when called with params', () => {
+      describe('when passed more then 180 degree', () => {
+        describe('when starting point is negative', () => {
+          beforeEach(() => {
+            this.segments = mathService.calculateSegments(
+              - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
+            );
+          });
+
+          describe('checking first segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[0];
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(- Math.PI / 6);
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(23 * Math.PI / 30);
+            });
+          });
+
+          describe('checking first segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[1];
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(23 * Math.PI / 30);
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(29 * Math.PI / 30);
+            });
+          });
+
+          describe('checking first segment', () => {
+            beforeEach(() => {
+              this.segment = this.segments[2];
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.startAngle)
+                .toBeCloseTo(29 * Math.PI / 30);
+            });
+
+            it('should return correct first endpoint', () => {
+              expect(this.segment.endAngle)
+                .toBeCloseTo(7 * Math.PI / 6);
+            });
+          });
+        });
+      });
+    });
+  });
+
+  describe('#calculateStep()', () => {
+    describe('when called without params', () => {
+      it('should return default result', () => {
+        expect(mathService.calculateStep())
+          .toEqual(0);
+      });
+    });
+
+    describe('when called with params', () => {
+      it('should return correct result once', () => {
+        expect(mathService.calculateStep(10, 50))
+          .toEqual(5);
+      });
+
+      it('should return correct result twice', () => {
+        expect(mathService.calculateStep(0, 50))
+          .toEqual(0);
+      });
+    });
+  });
+
+  describe('#calculateInterval()', () => {
+    describe('when called without params', () => {
+      it('should return zero', () => {
+        expect(mathService.calculateInterval()).toEqual(0);
+      });
+    });
+
+    describe('when called with params', () => {
+      describe('when pass points within 2 PI', () => {
+        it('should return correct result once', () => {
+          expect(mathService.calculateInterval(Math.PI / 4, 3 * Math.PI / 4))
+            .toBeCloseTo(Math.PI / 2);
+        });
+
+        describe('when pass points in revert way', () => {
+          it('should return correct result', () => {
+            expect(mathService.calculateInterval(3 * Math.PI / 4, Math.PI / 4))
+              .toBeCloseTo(Math.PI / 2);
+          });
+        });
+      });
+
+      describe('when pass points outside 2PI', () => {
+        it('should return correct result twice', () => {
+          expect(mathService.calculateInterval(9 * Math.PI / 4, 11 * Math.PI / 4))
+            .toBeCloseTo(Math.PI / 2);
+        });
+      });
+    });
+  })
 });
