@@ -60,14 +60,14 @@ describe('Gauge', () => {
       });
     });
 
-    xdescribe('#render()', () => {
+    describe('#createPolylines()', () => {
       describe('when called', () => {
         beforeEach(() => {
-          this.gaugeEl.render();
+          this.polylines = this.gaugeEl.createPolylines();
         });
 
-        it('should draw scale path', () => {
-          expect(this.gaugeEl.gaugeScaleEl.getAttribute('d')).not.toBe('');
+        it('should return document fragment with three children', () => {
+          expect(this.polylines.childElementCount).toEqual(3);
         });
       });
     });

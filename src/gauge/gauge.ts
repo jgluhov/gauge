@@ -41,19 +41,17 @@ class Gauge extends HTMLElement {
 
   private render() {
     this.renderScale();
+    this.renderAxis();
   }
 
   private renderScale() {
-    const elements = [].slice.call(
-      this.gaugeScaleGroupEl.querySelectorAll('polyline')
-    ),
-      arcSegments = mathService.calculateArcSegments(
+    const arcSegments = mathService.calculateArcSegments(
         constants.GAUGE_SCALE_START_ANGLE,
         constants.GAUGE_SCALE_END_ANGLE,
         constants.GAUGE_SCALE_RATIO
       );
 
-    const parts = arrayUtil.zip(elements, arcSegments);
+    const parts = arrayUtil.zip(this.gaugeScaleElements, arcSegments);
 
     parts.forEach((part) => {
       const polylineEl = part.shift() as SVGPolylineElement,
@@ -65,6 +63,10 @@ class Gauge extends HTMLElement {
         )
       );
     });
+  }
+
+  private renderAxis() {
+
   }
 
   /**
@@ -87,8 +89,35 @@ class Gauge extends HTMLElement {
     return content;
   }
 
+  private createPolylines = (): DocumentFragment => {
+    const polyline = document.createElementNS(
+      this.svgEl.getAttribute('xmlns'), 'polyline'
+    ),
+    fragment = document.createDocumentFragment();
+    polyline.classList.add('gauge__scale');
+
+    constants.GAUGE_SCALE_MODIFIERS.forEach(
+      (modifier) => {
+        const clone = (polyline.cloneNode(true) as SVGPolylineElement);
+        clone.classList.add(modifier);
+        fragment.appendChild(clone);
+      });
+
+    return fragment;
+  }
+
   private get gaugeScaleGroupEl() {
     return this.svgEl.querySelector('#gauge-scale-group');
+  }
+
+  private get gaugeScaleElements() {
+    const elements = this.gaugeScaleGroupEl.getElementsByTagName('polyline');
+
+    if (!arrayUtil.size(elements)) {
+      this.gaugeScaleGroupEl.appendChild(this.createPolylines());
+    }
+
+    return [].slice.call(elements);
   }
 }
 

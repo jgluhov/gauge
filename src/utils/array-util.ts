@@ -1,3 +1,7 @@
+interface IArrayLike {
+  length: number;
+}
+
 class ArrayUtil<T> {
   public zip = (...args: T[][]): T[][]  => {
     if (!args.length) {
@@ -13,7 +17,7 @@ class ArrayUtil<T> {
     );
   }
 
-  public size = (array: any[] = []): number => {
+  public size = (array: IArrayLike = []): number => {
     return array.length;
   }
 }
