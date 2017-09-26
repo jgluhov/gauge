@@ -1,12 +1,6 @@
-import Gauge from '../src/gauge/gauge';
-
-declare const fixture;
+import Gauge from '../../src/gauge/gauge';
 
 describe('Gauge', () => {
-  beforeAll(() => {
-    window.customElements.define('app-gauge', Gauge);
-  });
-
   beforeEach(() => {
     fixture.load('gauge.fixture.html');
     this.gaugeEl = fixture.el.firstChild;
@@ -47,27 +41,12 @@ describe('Gauge', () => {
   });
 
   describe('SVG', () => {
-    it('should have svg element property', () => {
-      expect(this.gaugeEl.svgEl).toBeDefined();
-    });
 
     describe('#createShadowRoot()', () => {
       describe('when its called', () => {
         it('should return SVGElement', () => {
           expect(this.gaugeEl.createShadowRoot())
             .toEqual(jasmine.any(Node));
-        });
-      });
-    });
-
-    describe('#createPolylines()', () => {
-      describe('when called', () => {
-        beforeEach(() => {
-          this.polylines = this.gaugeEl.createPolylines();
-        });
-
-        it('should return document fragment with three children', () => {
-          expect(this.polylines.childElementCount).toEqual(3);
         });
       });
     });
