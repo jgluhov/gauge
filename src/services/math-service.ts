@@ -49,7 +49,7 @@ class MathService {
 
   public normalizeAngle = (angle) => angle % (2 * Math.PI);
 
-  public calculateArcSegments = (
+  public calculateSegments = (
     startAngle: number = 0,
     endAngle: number = 0,
     ratio: number[]
@@ -65,7 +65,7 @@ class MathService {
         const step = calcStep(array[indx]) - (calcStep(array[indx - 1]));
         const segment = new Segment(start, start + (sign * step));
 
-        start = segment.endAngle;
+        start = segment.end;
         return [...segments, segment];
       }, []);
   }

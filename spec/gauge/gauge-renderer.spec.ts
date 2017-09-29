@@ -11,16 +11,4 @@ describe('Gauge Renderer', () => {
   it('should have svg element property', () => {
     expect(this.renderer.svgEl).toBeDefined();
   });
-
-  describe('#createPolylines()', () => {
-    describe('when called', () => {
-      beforeEach(() => {
-        this.polylines = this.renderer.createPolylines();
-      });
-
-      it('should return document fragment with three children', () => {
-        expect(this.polylines.childElementCount).toEqual(3);
-      });
-    });
-  });
 });

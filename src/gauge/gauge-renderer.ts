@@ -5,45 +5,41 @@ import Segment from '../structures/segment';
 import arrayUtil from '../utils/array-util';
 
 class GaugeRenderer {
+  private GAUGE_POLYLINES_COUNT = 3;
+
   constructor(private svgEl: SVGElement) {
   }
 
-  public createPolylines = (): DocumentFragment => {
-    const polyline = document.createElementNS(
-      this.svgEl.getAttribute('xmlns'), 'polyline'
-    ),
-    fragment = document.createDocumentFragment();
-    polyline.classList.add('gauge__scale');
-
-    constants.GAUGE_SCALE_MODIFIERS.forEach(
-      (modifier) => {
-        const clone = (polyline.cloneNode(true) as SVGPolylineElement);
-        clone.classList.add(modifier);
-        fragment.appendChild(clone);
-      });
-
-    return fragment;
-  }
-
   public renderScale() {
-    const arcSegments = mathService.calculateArcSegments(
+    const segments = mathService.calculateSegments(
         constants.GAUGE_SCALE_START_ANGLE,
         constants.GAUGE_SCALE_END_ANGLE,
         constants.GAUGE_SCALE_RATIO
       );
 
-    const parts = arrayUtil.zip(this.gaugeScaleElements, arcSegments);
+    Array.prototype.forEach.call(
+      this.gaugeScaleElements,
+      (gaugeScaleElement, indx) => {
+        gaugeScaleElement.setAttribute(
+          'points', SVGService.generateArc(
+            240, 115, 170, segments[indx].start, segments[indx].end
+          )
+        );
+      });
+  }
 
-    parts.forEach((part) => {
-      const polylineEl = part.shift() as SVGPolylineElement,
-        segment = part.shift() as Segment;
-
-      polylineEl.setAttribute(
-        'points', SVGService.generateArc(
-          240, 115, 170, segment.startAngle, segment.endAngle
-        )
-      );
-    });
+  private createElement = (tagName, count): DocumentFragment => {
+    return new Array(count)
+      .fill(0)
+      .map(() => {
+        return document.createElementNS(
+          this.svgEl.getAttribute('xmlns'), tagName
+        );
+      })
+      .reduce((fragment: DocumentFragment, element) => {
+        fragment.appendChild(element);
+        return fragment;
+      }, document.createDocumentFragment());
   }
 
   private get gaugeScaleGroupEl() {
@@ -51,13 +47,13 @@ class GaugeRenderer {
   }
 
   private get gaugeScaleElements() {
-    const elements = this.gaugeScaleGroupEl.getElementsByTagName('polyline');
-
-    if (!arrayUtil.size(elements)) {
-      this.gaugeScaleGroupEl.appendChild(this.createPolylines());
+    if (!this.gaugeScaleGroupEl.hasChildNodes()) {
+      this.gaugeScaleGroupEl.appendChild(
+        this.createElement('polyline', this.GAUGE_POLYLINES_COUNT)
+      );
     }
 
-    return [].slice.call(elements);
+    return this.gaugeScaleGroupEl.children;
   }
 }
 

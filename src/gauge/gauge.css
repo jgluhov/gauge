@@ -8,20 +8,20 @@
   transform: scale(1,-1);
 }
 
-.gauge__scale {
+#gauge-scale-group > polyline {
   fill: none;
   stroke-width: 4;
   stroke-linecap: square;
 }
 
-.gauge__scale-grey {
+#gauge-scale-group > polyline:nth-child(1) {
   stroke: #535353;
 }
 
-.gauge__scale-orange {
+#gauge-scale-group > polyline:nth-child(2) {
   stroke: #fd9409;
 }
 
-.gauge__scale-red {
+#gauge-scale-group > polyline:nth-child(3) {
   stroke: #fb000e;
 }
