@@ -33,17 +33,15 @@ class GaugeRenderer {
       constants.GAUGE_LINES_COUNT
     );
 
-    Array.from(this.gaugeAxisElements)
-      .forEach((el) => {
+    Array.from(this.gaugeLinesElements)
+      .forEach((el, i) => {
         const attr = el.setAttribute.bind(el),
-          axle = axis.shift(),
-          p1 = axle.shift(),
-          p2 = axle.shift();
+          line = axis[i].line;
 
-        attr('x1', p1.x);
-        attr('y1', p1.y);
-        attr('x2', p2.x);
-        attr('y2', p2.y);
+        attr('x1', line.p1.x);
+        attr('y1', line.p1.y);
+        attr('x2', line.p2.x);
+        attr('y2', line.p2.y);
       }
     );
   }
@@ -62,15 +60,7 @@ class GaugeRenderer {
       }, document.createDocumentFragment());
   }
 
-  private get gaugeScaleGroupEl() {
-    return this.svgEl.querySelector('#gauge-scale-group');
-  }
-
-  private get gaugeAxisGroupEl() {
-    return this.svgEl.querySelector('#gauge-axis-group');
-  }
-
-  private get gaugeScaleElements() {
+  private get gaugeScaleElements(): HTMLCollection {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
       this.gaugeScaleGroupEl.appendChild(
         this.createElement('polyline', constants.GAUGE_POLYLINES_COUNT)
@@ -80,14 +70,40 @@ class GaugeRenderer {
     return this.gaugeScaleGroupEl.children;
   }
 
-  private get gaugeAxisElements() {
-    if (!this.gaugeAxisGroupEl.hasChildNodes()) {
-      this.gaugeAxisGroupEl.appendChild(
+  private get gaugeLinesElements(): HTMLCollection {
+    if (!this.gaugeLinesGroupEl.hasChildNodes()) {
+      this.gaugeLinesGroupEl.appendChild(
         this.createElement('line', constants.GAUGE_LINES_COUNT)
       );
     }
 
-    return this.gaugeAxisGroupEl.children;
+    return this.gaugeLinesGroupEl.children;
+  }
+
+  private get gaugeTextsElements(): HTMLCollection {
+    if (!this.gaugeTextsGroupEl.hasChildNodes()) {
+      this.gaugeTextsGroupEl.appendChild(
+        this.createElement('text', constants.GAUGE_TEXT_COUNT)
+      );
+    }
+
+    return this.gaugeLinesGroupEl.children;
+  }
+
+  private get gaugeScaleGroupEl() {
+    return this.svgEl.querySelector('#gauge-scale-group');
+  }
+
+  private get gaugeAxisGroupEl() {
+    return this.svgEl.querySelector('#gauge-axis-group');
+  }
+
+  private get gaugeLinesGroupEl() {
+    return this.svgEl.querySelector('#gauge-lines-group');
+  }
+
+  private get gaugeTextsGroupEl() {
+    return this.svgEl.querySelector('#gauge-texts-group');
   }
 }
 

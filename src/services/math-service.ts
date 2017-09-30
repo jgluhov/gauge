@@ -1,5 +1,9 @@
+import * as constants from '../constants';
+import Axle from '../structures/axle';
 import Point from '../structures/point';
 import Segment from '../structures/segment';
+import SVGLine from '../structures/svg-line';
+import SVGText from '../structures/svg-text';
 import utilService from '../utils/array-util';
 
 class MathService {
@@ -63,30 +67,46 @@ class MathService {
     radius: number = 0,
     startAngle: number = 0,
     endAngle: number = 0,
-    count: number = 0,
-    indent: number = 8,
-    length: number = 3
+    count: number = 0
   ) => {
     const interval = this.calculateInterval(startAngle, endAngle),
-      step = interval / (count - 1),
-      sign = Math.sign(endAngle - startAngle);
+      step = this.calcStep(interval, count),
+      sign = Math.sign(endAngle - startAngle),
+      toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
+      indentedRadiusForLines = radius + constants.GAUGE_LINES_INDENT,
+      indentedRadiusForTexts = radius + constants.GAUGE_LINES_INDENT +
+        constants.GAUGE_LINES_LENGTH;
 
     return new Array(count)
       .fill(0)
-      .reduce((lines: Point[][]) => {
-        const line = [
-          this.polarToCartesian(centerX, centerY, radius + indent, startAngle),
-          this.polarToCartesian(centerX, centerY, radius + indent + length, startAngle)
-        ];
+      .reduce((axis: IAxis, i: number) => {
+        const axle = new Axle(
+          new SVGLine(
+            toCartesian(indentedRadiusForLines, startAngle),
+            toCartesian(
+              indentedRadiusForLines + constants.GAUGE_LINES_LENGTH, startAngle
+            )
+          ),
+          new SVGText(
+            toCartesian(
+              indentedRadiusForTexts + constants.GAUGE_TEXT_INDENT, startAngle
+            ),
+            i.toString()
+          )
+        );
 
         startAngle += sign * step;
 
-        return [...lines, line];
+        return [...axis, axle];
       }, []);
   }
 
   public calcRatio = (total: number = 0, percent: number = 0): number => {
     return total * percent / 100;
+  }
+
+  public calcStep = (total: number = 0, count: number = 0): number => {
+    return total / (count - 1);
   }
 
   public calculateInterval = (start: number = 0, end: number = 0): number => {
