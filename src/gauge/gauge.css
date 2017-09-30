@@ -25,3 +25,10 @@
 #gauge-scale-group > polyline:nth-child(3) {
   stroke: #fb000e;
 }
+
+#gauge-axis-group > line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke: #727272;
+}

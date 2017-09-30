@@ -1,6 +1,65 @@
 import mathService from '../../src/services/math-service';
+import Point from '../../src/structures/point';
 
 describe('Math Service', () => {
+  describe('#polarToCartesian()', () => {
+    describe('when called without params', () => {
+      it('should return object', () => {
+        expect(mathService.polarToCartesian())
+          .toEqual(jasmine.any(Point));
+      });
+
+      it('should return zero coordinates', () => {
+        expect(mathService.polarToCartesian())
+          .toEqual(new Point());
+      });
+    });
+
+    describe('when called with params', () => {
+      describe('when set center point ot zero', () => {
+        describe('when we specify radius and angle', () => {
+          beforeEach(() => {
+            this.radius = 2.5;
+            this.angle = Math.PI / 4;
+          });
+
+          it('should return correct first point', () => {
+            expect(mathService.polarToCartesian(0, 0, this.radius, 0))
+              .toEqual(new Point(2.5, 0));
+          });
+
+          it('should return correct second point', () => {
+            const point: Point = mathService.polarToCartesian(
+              0, 0, this.radius, this.angle
+            );
+
+            expect(point.x).toBeCloseTo(1.7677669);
+            expect(point.y).toBeCloseTo(1.7677669);
+          });
+        });
+      });
+
+      describe('when we specify center point', () => {
+        describe('when we specify radius and angle', () => {
+          it('should return correct first point', () => {
+            expect(mathService.polarToCartesian(-5, -5, 2.5, 0))
+              .toEqual(new Point(-2.5, -5));
+          });
+
+          it('should return correct second point', () => {
+            const angle = Math.PI / 4,
+              radius = 2.5;
+
+            const point = mathService.polarToCartesian(-3, 5, radius, angle);
+
+            expect(point.x).toBeCloseTo(-1.2322330);
+            expect(point.y).toBeCloseTo(6.7677669);
+          });
+        });
+      });
+    });
+
+  });
   describe('#isEpsilon()', () => {
     describe('when called without param', () => {
       it('should return true', () => {
@@ -271,22 +330,22 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#calcStep()', () => {
+  describe('#calcRatio()', () => {
     describe('when called without params', () => {
       it('should return default result', () => {
-        expect(mathService.calcStep())
+        expect(mathService.calcRatio())
           .toEqual(0);
       });
     });
 
     describe('when called with params', () => {
       it('should return correct result once', () => {
-        expect(mathService.calcStep(10, 50))
+        expect(mathService.calcRatio(10, 50))
           .toEqual(5);
       });
 
       it('should return correct result twice', () => {
-        expect(mathService.calcStep(0, 50))
+        expect(mathService.calcRatio(0, 50))
           .toEqual(0);
       });
     });
