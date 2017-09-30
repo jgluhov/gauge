@@ -47,7 +47,7 @@ class MathService {
     end: number = 0,
     ratio: number[]
   ): Segment[] => {
-    const interval = this.calculateInterval(start, end),
+    const interval = this.calcCentralAngle(start, end),
       calcRatio = this.calcRatio.bind(this, interval),
       sign = Math.sign(end - start);
 
@@ -67,19 +67,23 @@ class MathService {
     radius: number = 0,
     startAngle: number = 0,
     endAngle: number = 0,
-    count: number = 0
+    count: number = 0,
+    totalLength: number = 0
   ) => {
-    const interval = this.calculateInterval(startAngle, endAngle),
-      step = this.calcStep(interval, count),
+    const centralAngle = this.calcCentralAngle(startAngle, endAngle),
+      stepAngle = this.calcStep(centralAngle, count),
+      stepLength = this.calcStep(totalLength, count),
       sign = Math.sign(endAngle - startAngle),
       toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
       indentedRadiusForLines = radius + constants.GAUGE_LINES_INDENT,
-      indentedRadiusForTexts = radius + constants.GAUGE_LINES_INDENT +
+      indentedRadiusForTexts = radius + (2 * constants.GAUGE_LINES_INDENT) +
         constants.GAUGE_LINES_LENGTH;
+
+    let startLength = sign ? totalLength : 0;
 
     return new Array(count)
       .fill(0)
-      .reduce((axis: IAxis, i: number) => {
+      .reduce((axis: IAxis, item, i: number) => {
         const axle = new Axle(
           new SVGLine(
             toCartesian(indentedRadiusForLines, startAngle),
@@ -88,14 +92,15 @@ class MathService {
             )
           ),
           new SVGText(
-            toCartesian(
-              indentedRadiusForTexts + constants.GAUGE_TEXT_INDENT, startAngle
-            ),
-            i.toString()
+            Math.max(0, startLength + sign * 5),
+            i.toString(),
+            toCartesian(indentedRadiusForTexts + 6, startAngle),
+            this.radiansToDegree(Math.PI / 2 + (sign * startAngle))
           )
         );
 
-        startAngle += sign * step;
+        startAngle += sign * stepAngle;
+        startLength += sign * stepLength;
 
         return [...axis, axle];
       }, []);
@@ -109,11 +114,15 @@ class MathService {
     return total / (count - 1);
   }
 
-  public calculateInterval = (start: number = 0, end: number = 0): number => {
+  public calcCentralAngle = (start: number = 0, end: number = 0): number => {
     const s = this.normalizeAngle(start),
       e = this.normalizeAngle(end);
 
     return s < e ? (e - s) : (s - e);
+  }
+
+  public radiansToDegree = (radians: number): number => {
+    return (radians / Math.PI) * 180;
   }
 
   public polarToCartesian = (

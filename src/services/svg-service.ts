@@ -17,6 +17,8 @@ class SVGService {
     startAngle = mathService.normalizeAngle(startAngle);
     endAngle = mathService.normalizeAngle(endAngle);
 
+    points.push('M');
+
     for (let angle = start; angle <= end; angle += constants.GAUGE_SCALE_DRAW_STEP) {
       const { x , y } = mathService.polarToCartesian(
         centerX, centerY, radius, angle

@@ -21,8 +21,10 @@ interface ISVGLine {
 }
 
 interface ISVGText {
+  x: number;
+  content: string;
   p: IPoint;
-  text: string;
+  degree: number;
 }
 
 interface IAxle {

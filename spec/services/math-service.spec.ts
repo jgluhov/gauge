@@ -354,20 +354,20 @@ describe('Math Service', () => {
   describe('#calculateInterval()', () => {
     describe('when called without params', () => {
       it('should return zero', () => {
-        expect(mathService.calculateInterval()).toEqual(0);
+        expect(mathService.calcCentralAngle()).toEqual(0);
       });
     });
 
     describe('when called with params', () => {
       describe('when pass points within 2 PI', () => {
         it('should return correct result once', () => {
-          expect(mathService.calculateInterval(Math.PI / 4, 3 * Math.PI / 4))
+          expect(mathService.calcCentralAngle(Math.PI / 4, 3 * Math.PI / 4))
             .toBeCloseTo(Math.PI / 2);
         });
 
         describe('when pass points in revert way', () => {
           it('should return correct result', () => {
-            expect(mathService.calculateInterval(3 * Math.PI / 4, Math.PI / 4))
+            expect(mathService.calcCentralAngle(3 * Math.PI / 4, Math.PI / 4))
               .toBeCloseTo(Math.PI / 2);
           });
         });
@@ -375,7 +375,7 @@ describe('Math Service', () => {
 
       describe('when pass points outside 2PI', () => {
         it('should return correct result twice', () => {
-          expect(mathService.calculateInterval(9 * Math.PI / 4, 11 * Math.PI / 4))
+          expect(mathService.calcCentralAngle(9 * Math.PI / 4, 11 * Math.PI / 4))
             .toBeCloseTo(Math.PI / 2);
         });
       });

@@ -8,21 +8,21 @@
   transform: scale(1,-1);
 }
 
-#gauge-scale-group > polyline {
+#gauge-scale-group > path {
   fill: none;
   stroke-width: 4;
   stroke-linecap: square;
 }
 
-#gauge-scale-group > polyline:nth-child(1) {
+#gauge-scale-group > path:nth-child(1) {
   stroke: #535353;
 }
 
-#gauge-scale-group > polyline:nth-child(2) {
+#gauge-scale-group > path:nth-child(2) {
   stroke: #fd9409;
 }
 
-#gauge-scale-group > polyline:nth-child(3) {
+#gauge-scale-group > path:nth-child(3) {
   stroke: #fb000e;
 }
 
@@ -31,4 +31,8 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke: #727272;
+}
+
+#gauge-texts-group > text {
+  font-family: Lucida Console, Courier, monospace;
 }
