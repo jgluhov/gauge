@@ -153,37 +153,6 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#isGreaterOrEqual()', () => {
-    describe('when called without params', () => {
-      it('should return false', () => {
-        expect(mathService.isGreaterOrEqual()).toBeFalsy();
-      });
-    });
-
-    describe('when called with params', () => {
-      describe('when angle is greater then 180 degree', () => {
-        it('should return true', () => {
-          expect(mathService.isGreaterOrEqual(Math.PI, 0, 3 * Math.PI / 2))
-            .toBeTruthy();
-        });
-      });
-
-      describe('when angle is less then 180 degree', () => {
-        it('should return true', () => {
-          expect(mathService.isGreaterOrEqual(Math.PI, 0, Math.PI / 2))
-            .toBeFalsy();
-        });
-      });
-
-      describe('when angle is equal 180 degree', () => {
-        it('should return true', () => {
-          expect(mathService.isGreaterOrEqual(Math.PI, 0, Math.PI))
-            .toBeTruthy();
-        });
-      });
-    });
-  });
-
   describe('#calculateSegments()', () => {
     describe('when called with params', () => {
       describe('when passed more then 180 degree', () => {
@@ -302,22 +271,22 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#calculateStep()', () => {
+  describe('#calcStep()', () => {
     describe('when called without params', () => {
       it('should return default result', () => {
-        expect(mathService.calculateStep())
+        expect(mathService.calcStep())
           .toEqual(0);
       });
     });
 
     describe('when called with params', () => {
       it('should return correct result once', () => {
-        expect(mathService.calculateStep(10, 50))
+        expect(mathService.calcStep(10, 50))
           .toEqual(5);
       });
 
       it('should return correct result twice', () => {
-        expect(mathService.calculateStep(0, 50))
+        expect(mathService.calcStep(0, 50))
           .toEqual(0);
       });
     });

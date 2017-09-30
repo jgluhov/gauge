@@ -12,6 +12,15 @@ class MathService {
       }, 1);
   }
 
+  public correctionFactor = (...numbers): number => {
+    return numbers.reduce((prev: number, next: number) => {
+      const mp = this.multiplier(prev),
+          mn = this.multiplier(next);
+
+      return Math.max(mp, mn);
+    }, 1);
+  }
+
   public multiplier = (x: number): number => {
     const parts = x.toString().split('.');
 
@@ -22,76 +31,41 @@ class MathService {
     return Math.pow(10, parts[1].length);
   }
 
-  public correctionFactor = (...numbers): number => {
-    return numbers.reduce((prev: number, next: number) => {
-      const mp = this.multiplier(prev),
-          mn = this.multiplier(next);
+  public isEpsilon = (n: number = 0): boolean => Math.abs(n) < 1e-10;
 
-      return Math.max(mp, mn);
-    }, 1);
-  }
-
-  public isEpsilon = (n: number = 0): boolean => {
-    return Math.abs(n) < 1e-10;
-  }
-
-  public formatNumber = (n: number = 0): number => {
-    return this.isEpsilon(n) ? 0 : n;
-  }
-
-  public isGreaterOrEqual = (
-    comparator: number = 0,
-    startAngle: number = 0,
-    endAngle: number = 0
-  ): boolean => {
-    return (Math.PI <= (Math.abs(endAngle - startAngle)));
-  }
+  public formatNumber = (n: number = 0): number => this.isEpsilon(n) ? 0 : n;
 
   public normalizeAngle = (angle) => angle % (2 * Math.PI);
 
   public calculateSegments = (
-    startAngle: number = 0,
-    endAngle: number = 0,
+    start: number = 0,
+    end: number = 0,
     ratio: number[]
   ) => {
-    const interval = this.calculateInterval(startAngle, endAngle),
-      calcStep = this.calculateStep.bind(this, interval),
-      sign = Math.sign(endAngle - startAngle);
-
-    let start = startAngle;
+    const interval = this.calculateInterval(start, end),
+      calcStep = this.calcStep.bind(this, interval),
+      sign = Math.sign(end - start);
 
     return ratio.reduce(
-      (segments: Segment[], percent: number, indx: number, array: number[]) => {
-        const step = calcStep(array[indx]) - (calcStep(array[indx - 1]));
-        const segment = new Segment(start, start + (sign * step));
+      (segments, percent: number, indx: number, array: number[]) => {
+        const step = calcStep(array[indx]) - (calcStep(array[indx - 1])),
+          segment = new Segment(start, start + (sign * step));
 
         start = segment.end;
         return [...segments, segment];
       }, []);
   }
 
-  public calculateStep = (
-    total: number = 0,
-    percent: number = 0
-  ): number => {
+  public calcStep = (total: number = 0, percent: number = 0): number => {
     return total * percent / 100;
   }
 
-  public calculateInterval = (
-    startAngle: number = 0,
-    endAngle: number = 0
-  ): number => {
-    const start = this.normalizeAngle(startAngle),
-      end = this.normalizeAngle(endAngle);
+  public calculateInterval = (start: number = 0, end: number = 0): number => {
+    const s = this.normalizeAngle(start),
+      e = this.normalizeAngle(end);
 
-    return start < end ? end - start : start - end;
+    return s < e ? (e - s) : (s - e);
   }
-
-  /**
-   * TODO: need to realize converting from
-   * scientific format of number to decimal one
-   * like this https://gist.github.com/jiggzson/b5f489af9ad931e3d186
-   */
 }
 
 export default new MathService();

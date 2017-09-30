@@ -3,30 +3,6 @@ import Point from '../structures/point';
 import mathService from './math-service';
 
 class SVGService {
-  public describeArc = (
-    centerX: number = 0,
-    centerY: number = 0,
-    radius: number = 0,
-    startAngle: number = 0,
-    endAngle: number = 0
-  ): string => {
-    const start = this.polarToCartesian(centerX, centerY, radius, startAngle),
-      end = this.polarToCartesian(centerX, centerY, radius, endAngle);
-
-    const isGreaterOrEqual = mathService.isGreaterOrEqual(
-        Math.PI, startAngle, endAngle
-      );
-
-    const largeArcFlag = Number(isGreaterOrEqual);
-
-    const d = [
-      'M', start.x, start.y,
-      'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
-    ].join(' ');
-
-    return d;
-  }
-
   public generateArc = (
     centerX: number = 0,
     centerY: number = 0,
@@ -45,7 +21,8 @@ class SVGService {
       const { x , y } = this.polarToCartesian(
         centerX, centerY, radius, angle
       );
-      points.push([x, ',', y].join(''));
+
+      points.push([ x, ',', y].join(''));
     }
 
     return points.join(' ');
