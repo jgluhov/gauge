@@ -37,6 +37,7 @@
   font-family: Lucida Console, Courier, monospace;
 }
 
-#gauge-hand {
+#gauge-hand-group > circle,
+#gauge-hand-group > path {
   fill: #1d84dd;
 }

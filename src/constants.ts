@@ -16,4 +16,4 @@ export const GAUGE_TICKS_LENGTH = 3;
 export const GAUGE_TICKS_TEXT_INDENT = 8;
 export const GAUGE_TICKS_TEXT_COUNT = 7;
 
-export const GAUGE_HAND_RADIUS = 8;
+export const GAUGE_HAND_RADIUS = 10;

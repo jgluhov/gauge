@@ -38,17 +38,16 @@ class SVGService {
       ticksIndent = constants.GAUGE_TICKS_INDENT,
       ticksLength = constants.GAUGE_TICKS_LENGTH,
       point = mathService.polarToCartesian(
-        centerX, centerY,
+        centerX,
+        centerY,
         scaleRadius + ticksIndent + ticksLength,
         Math.PI / 2
       );
 
     return `
-      M${centerX - handRadius} ${centerY}
-      C${centerX - 20}         ${centerY - 22},
-       ${centerX + 20}         ${centerY - 22},
-       ${centerX + handRadius} ${centerY},
-      L${point.x}              ${point.y},
+      M${centerX - handRadius / 2} ${centerY}
+      L${point.x}  ${point.y},
+      L${centerX + handRadius / 2} ${centerY}
       Z
     `;
   }

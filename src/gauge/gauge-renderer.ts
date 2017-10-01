@@ -85,7 +85,14 @@ class GaugeRenderer {
   }
 
   public renderHand() {
-    this.gaugeHandEl.setAttribute('d', SVGService.describeHand());
+    const circleEl = this.gaugeHandElements.shift(),
+      arrowEl = this.gaugeHandElements.pop();
+
+    circleEl.setAttribute('cx', constants.GAUGE_SCALE_CENTER_X.toString());
+    circleEl.setAttribute('cy', constants.GAUGE_SCALE_CENTER_Y.toString());
+    circleEl.setAttribute('r', constants.GAUGE_HAND_RADIUS.toString());
+
+    arrowEl.setAttribute('d', SVGService.describeHand());
   }
 
   private createElement = (tagName, count = 1): DocumentFragment => {
@@ -102,27 +109,27 @@ class GaugeRenderer {
       }, document.createDocumentFragment());
   }
 
-  private get gaugeScaleElements(): HTMLCollection {
+  private get gaugeScaleElements(): SVGElement[] {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
       this.gaugeScaleGroupEl.appendChild(
         this.createElement('path', constants.GAUGE_SCALE_PATH_COUNT)
       );
     }
 
-    return this.gaugeScaleGroupEl.children;
+    return [].slice.call(this.gaugeScaleGroupEl.children);
   }
 
-  private get gaugeLinesElements(): HTMLCollection {
+  private get gaugeLinesElements(): SVGElement[] {
     if (!this.gaugeLinesGroupEl.hasChildNodes()) {
       this.gaugeLinesGroupEl.appendChild(
         this.createElement('line', constants.GAUGE_TICKS_COUNT)
       );
     }
 
-    return this.gaugeLinesGroupEl.children;
+    return [].slice.call(this.gaugeLinesGroupEl.children);
   }
 
-  private get gaugeTextsElements(): HTMLCollection {
+  private get gaugeTextsElements(): SVGElement[] {
     if (!this.gaugeTextsGroupEl.hasChildNodes()) {
       this.gaugeTextsGroupEl.appendChild(
         this.createElement('text', constants.GAUGE_TICKS_TEXT_COUNT)
@@ -132,7 +139,16 @@ class GaugeRenderer {
         .forEach((el) => el.appendChild(this.createElement('textPath')));
     }
 
-    return this.gaugeTextsGroupEl.children;
+    return [].slice.call(this.gaugeTextsGroupEl.children);
+  }
+
+  private get gaugeHandElements(): SVGElement[] {
+    if (!this.gaugeHandGroupEl.hasChildNodes()) {
+      this.gaugeHandGroupEl.appendChild(this.createElement('circle'));
+      this.gaugeHandGroupEl.appendChild(this.createElement('path'));
+    }
+
+    return [].slice.call(this.gaugeHandGroupEl.children);
   }
 
   private get gaugeScaleGroupEl() {
@@ -159,8 +175,8 @@ class GaugeRenderer {
     return this.gaugeTextPathEl.getTotalLength();
   }
 
-  private get gaugeHandEl(): SVGPathElement {
-    return this.svgEl.querySelector('#gauge-hand') as SVGPathElement;
+  private get gaugeHandGroupEl() {
+    return this.svgEl.querySelector('#gauge-hand-group');
   }
 }
 
