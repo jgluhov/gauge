@@ -1,4 +1,4 @@
-export default class SVGLine implements ISVGLine {
+export default class Tick implements ITick {
   constructor(
     public p1: IPoint,
     public p2: IPoint

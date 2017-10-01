@@ -15,7 +15,7 @@ interface IPoint {
   y: number;
 }
 
-interface ISVGLine {
+interface ITick {
   p1: IPoint;
   p2: IPoint;
 }
@@ -28,7 +28,7 @@ interface ISVGText {
 }
 
 interface IAxle {
-  line: ISVGLine;
+  tick: ITick;
   text: ISVGText;
 }
 

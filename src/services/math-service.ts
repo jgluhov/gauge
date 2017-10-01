@@ -2,8 +2,8 @@ import * as constants from '../constants';
 import Axle from '../structures/axle';
 import Point from '../structures/point';
 import Segment from '../structures/segment';
-import SVGLine from '../structures/svg-line';
 import SVGText from '../structures/svg-text';
+import Tick from '../structures/tick';
 import utilService from '../utils/array-util';
 
 class MathService {
@@ -42,7 +42,7 @@ class MathService {
 
   public normalizeAngle = (angle) => angle % (2 * Math.PI);
 
-  public calculateSegments = (
+  public calcSegments = (
     start: number = 0,
     end: number = 0,
     ratio: number[]
@@ -61,7 +61,37 @@ class MathService {
       }, []);
   }
 
-  public calculateAxis = (
+  public generateTicks = (
+    centerX: number,
+    centerY: number,
+    startAngle: number,
+    endAngle: number,
+    radius: number,
+    ticksCount: number
+  ) => {
+    const toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
+      centralAngle = this.calcCentralAngle(startAngle, endAngle),
+      step = this.calcStep(centralAngle, ticksCount);
+
+    let angle = startAngle;
+
+    return new Array(ticksCount)
+      .fill(0)
+      .reduce((ticks: ITick[]) => {
+        ticks.push(
+          new Tick(
+            toCartesian(radius, angle),
+            toCartesian(radius + constants.GAUGE_TICKS_LENGTH, angle)
+          )
+        );
+
+        angle += step;
+
+        return ticks;
+      }, []);
+  }
+
+  public calcAxis = (
     centerX: number = 0,
     centerY: number = 0,
     radius: number = 0,
@@ -70,40 +100,41 @@ class MathService {
     count: number = 0,
     totalLength: number = 0
   ) => {
-    const centralAngle = this.calcCentralAngle(startAngle, endAngle),
-      stepAngle = this.calcStep(centralAngle, count),
-      stepLength = this.calcStep(totalLength, count),
-      sign = Math.sign(endAngle - startAngle),
-      toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
-      indentedRadiusForLines = radius + constants.GAUGE_TICKS_INDENT,
-      indentedRadiusForTexts = radius + (2 * constants.GAUGE_TICKS_INDENT) +
-        constants.GAUGE_TICKS_LENGTH;
-
-    let startLength = sign ? totalLength : 0;
-
-    return new Array(count)
-      .fill(0)
-      .reduce((axis: IAxis, item, i: number) => {
-        const axle = new Axle(
-          new SVGLine(
-            toCartesian(indentedRadiusForLines, startAngle),
-            toCartesian(
-              indentedRadiusForLines + constants.GAUGE_TICKS_LENGTH, startAngle
-            )
-          ),
-          new SVGText(
-            Math.max(0, startLength + sign * 5),
-            i.toString(),
-            toCartesian(indentedRadiusForTexts + 6, startAngle),
-            this.radiansToDegree(Math.PI / 2 + (sign * startAngle))
-          )
-        );
-
-        startAngle += sign * stepAngle;
-        startLength += sign * stepLength;
-
-        return [...axis, axle];
-      }, []);
+    // const centralAngle = this.calcCentralAngle(startAngle, endAngle),
+    //   stepAngle = this.calcStep(centralAngle, count),
+    //   stepLength = this.calcStep(totalLength, count),
+    //   sign = Math.sign(endAngle - startAngle),
+    //   toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
+    //   indentedRadiusForTexts = radius + (2 * constants.GAUGE_TICKS_INDENT) +
+    //     constants.GAUGE_TICKS_LENGTH;
+    //
+    // let position = sign ? totalLength : 0,
+    //   textStartAngle = endAngle;
+    //
+    // return new Array(count)
+    //   .fill(0)
+    //   .reduce((axis: IAxis, item, i: number) => {
+    //     const axle = new Axle(
+    //       new SVGLine(
+    //         toCartesian(indentedRadiusForLines, startAngle),
+    //         toCartesian(
+    //           indentedRadiusForLines + constants.GAUGE_TICKS_LENGTH, startAngle
+    //         )
+    //       ),
+    //       new SVGText(
+    //         position,
+    //         i.toString(),
+    //         toCartesian(indentedRadiusForTexts + 6, stepAngle),
+    //         this.radiansToDegree(Math.PI / 2 + (sign * startAngle))
+    //       )
+    //     );
+    //
+    //     startAngle += sign * stepAngle;
+    //     position -= stepLength;
+    //     textStartAngle -= stepAngle;
+    //
+    //     return [...axis, axle];
+    //   }, []);
   }
 
   public calcRatio = (total: number = 0, percent: number = 0): number => {
@@ -136,6 +167,10 @@ class MathService {
       centerX + this.multiply(radius * Math.cos(angle)),
       centerY + this.multiply(radius * Math.sin(angle))
     );
+  }
+
+  public radiansToHandPosition = (radians: number): number => {
+    return this.radiansToDegree(-1 * (radians - (Math.PI / 2)));
   }
 }
 

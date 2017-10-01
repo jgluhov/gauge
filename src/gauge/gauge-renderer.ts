@@ -6,25 +6,44 @@ import Segment from '../structures/segment';
 import arrayUtil from '../utils/array-util';
 
 class GaugeRenderer {
+  private centerX: number;
+  private centerY: number;
+  private scaleRadius: number;
+  private ticksIndent: number;
+  private ticksLength: number;
+  private startAngle: number;
+  private endAngle: number;
+  private scaleRatio: number[];
+  private ticksCount: number;
+
   constructor(private svgEl: SVGElement) {
+    this.centerX = constants.GAUGE_SCALE_CENTER_X;
+    this.centerY = constants.GAUGE_SCALE_CENTER_Y;
+    this.scaleRadius = constants.GAUGE_SCALE_RADIUS;
+    this.startAngle = constants.GAUGE_SCALE_START_ANGLE;
+    this.endAngle = constants.GAUGE_SCALE_END_ANGLE;
+    this.scaleRatio = constants.GAUGE_SCALE_RATIO;
+    this.ticksCount = constants.GAUGE_TICKS_COUNT;
+    this.ticksIndent = constants.GAUGE_TICKS_INDENT;
+    this.ticksLength = constants.GAUGE_TICKS_LENGTH;
   }
 
   public renderScale() {
-    const segments = mathService.calculateSegments(
-        constants.GAUGE_SCALE_START_ANGLE,
-        constants.GAUGE_SCALE_END_ANGLE,
-        constants.GAUGE_SCALE_RATIO
+    const segs = mathService.calcSegments(
+        this.startAngle,
+        this.endAngle,
+        this.scaleRatio
       );
 
     Array.from(this.gaugeScaleElements)
       .forEach((el, indx) => {
         el.setAttribute(
           'd', SVGService.generateArc(
-            constants.GAUGE_SCALE_CENTER_X,
-            constants.GAUGE_SCALE_CENTER_Y,
-            constants.GAUGE_SCALE_RADIUS,
-            segments[indx].start,
-            segments[indx].end
+            this.centerX,
+            this.centerY,
+            this.scaleRadius,
+            segs[indx].start,
+            segs[indx].end
           )
         );
       });
@@ -33,55 +52,25 @@ class GaugeRenderer {
   public renderAxis() {
     this.gaugeTextPathEl.setAttribute(
       'd', SVGService.generateArc(
-        constants.GAUGE_SCALE_CENTER_X,
-        constants.GAUGE_SCALE_CENTER_Y,
-        (
-          constants.GAUGE_SCALE_RADIUS +
-          (2 * constants.GAUGE_TICKS_INDENT) +
-          constants.GAUGE_TICKS_LENGTH
-        ),
-        constants.GAUGE_SCALE_START_ANGLE,
-        constants.GAUGE_SCALE_END_ANGLE
+        this.centerX, this.centerY,
+        this.scaleRadius + (2 * this.ticksIndent) + this.ticksLength,
+        this.startAngle,
+        this.endAngle
       )
     );
 
-    const axis = mathService.calculateAxis(
-      constants.GAUGE_SCALE_CENTER_X,
-      constants.GAUGE_SCALE_CENTER_Y,
-      constants.GAUGE_SCALE_RADIUS,
-      constants.GAUGE_SCALE_START_ANGLE,
-      constants.GAUGE_SCALE_END_ANGLE,
-      constants.GAUGE_TICKS_COUNT,
-      this.gaugeScaleLength
-    );
+    // const axis = mathService.calcAxis(
+    //   this.centerX,
+    //   this.centerY,
+    //   this.scaleRadius,
+    //   this.startAngle,
+    //   this.endAngle,
+    //   this.ticksCount,
+    //   this.gaugeScaleLength
+    // );
 
-    Array.from(this.gaugeLinesElements)
-      .forEach((el, i) => {
-        const attr = el.setAttribute.bind(el),
-          line = axis[i].line;
-
-        attr('x1', line.p1.x);
-        attr('y1', line.p1.y);
-        attr('x2', line.p2.x);
-        attr('y2', line.p2.y);
-      }
-    );
-
-    Array.from(this.gaugeTextsElements)
-      .forEach((el, i: number) => {
-        const textPathEl = el.firstElementChild,
-          text = axis[i].text;
-
-        el.setAttribute('x', text.x);
-        el.setAttribute('text-anchor', 'start');
-        el.setAttribute('transform', `
-          translate(${2 * text.p.x},0)
-          scale(-1, 1)
-          rotate(${text.degree} ${text.p.x} ${text.p.y})
-        `);
-        textPathEl.setAttribute('href', '#gauge-text-path');
-        textPathEl.textContent = text.content;
-      });
+    this.renderTicks();
+    // this.renderTexts(axis);
   }
 
   public renderHand() {
@@ -93,6 +82,55 @@ class GaugeRenderer {
     circleEl.setAttribute('r', constants.GAUGE_HAND_RADIUS.toString());
 
     arrowEl.setAttribute('d', SVGService.describeHand());
+    arrowEl.setAttribute('transform', `
+      translate(${2 * constants.GAUGE_SCALE_CENTER_X},0)
+      scale(-1, 1)
+      rotate(
+        ${mathService.radiansToHandPosition(constants.GAUGE_SCALE_START_ANGLE)}
+        ${constants.GAUGE_SCALE_CENTER_X} ${constants.GAUGE_SCALE_CENTER_Y}
+      )
+    `);
+  }
+
+  private renderTicks() {
+    const ticks = mathService.generateTicks(
+      this.centerX,
+      this.centerY,
+      this.startAngle,
+      this.endAngle,
+      this.scaleRadius + this.ticksIndent,
+      this.ticksCount
+    );
+
+    Array.from(this.gaugeLinesElements)
+      .forEach((el, i) => {
+        const attr = el.setAttribute.bind(el),
+          tick = ticks[i];
+
+        attr('x1', tick.p1.x);
+        attr('y1', tick.p1.y);
+        attr('x2', tick.p2.x);
+        attr('y2', tick.p2.y);
+      }
+    );
+  }
+
+  private renderTexts(axis: IAxis) {
+    Array.from(this.gaugeTextsElements)
+      .forEach((el, i: number) => {
+        const textPathEl = el.firstElementChild,
+          text = axis[i].text;
+
+        el.setAttribute('x', text.x.toString());
+        el.setAttribute('text-anchor', 'middle');
+        // el.setAttribute('transform', `
+        //   translate(${2 * text.p.x},0)
+        //   scale(-1, 1)
+        //   rotate(${text.degree} ${text.p.x} ${text.p.y})
+        // `);
+        textPathEl.setAttribute('href', '#gauge-text-path');
+        textPathEl.textContent = text.content;
+      });
   }
 
   private createElement = (tagName, count = 1): DocumentFragment => {
