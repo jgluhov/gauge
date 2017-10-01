@@ -9,7 +9,7 @@
 }
 
 #gauge-scale-group > path {
-  fill: none;
+  fill: transparent;
   stroke-width: 4;
   stroke-linecap: square;
 }
@@ -35,4 +35,8 @@
 
 #gauge-texts-group > text {
   font-family: Lucida Console, Courier, monospace;
+}
+
+#gauge-hand {
+  fill: #1d84dd;
 }

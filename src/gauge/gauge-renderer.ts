@@ -85,7 +85,7 @@ class GaugeRenderer {
   }
 
   public renderHand() {
-
+    this.gaugeHandEl.setAttribute('d', SVGService.describeHand());
   }
 
   private createElement = (tagName, count = 1): DocumentFragment => {
@@ -157,6 +157,10 @@ class GaugeRenderer {
 
   private get gaugeScaleLength(): number {
     return this.gaugeTextPathEl.getTotalLength();
+  }
+
+  private get gaugeHandEl(): SVGPathElement {
+    return this.svgEl.querySelector('#gauge-hand') as SVGPathElement;
   }
 }
 
