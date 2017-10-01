@@ -45,6 +45,7 @@ class Gauge extends HTMLElement {
   private render() {
     this.renderer.renderScale();
     this.renderer.renderAxis();
+    this.renderer.renderHand();
   }
 
   /**

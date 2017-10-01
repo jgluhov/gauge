@@ -75,9 +75,9 @@ class MathService {
       stepLength = this.calcStep(totalLength, count),
       sign = Math.sign(endAngle - startAngle),
       toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
-      indentedRadiusForLines = radius + constants.GAUGE_LINES_INDENT,
-      indentedRadiusForTexts = radius + (2 * constants.GAUGE_LINES_INDENT) +
-        constants.GAUGE_LINES_LENGTH;
+      indentedRadiusForLines = radius + constants.GAUGE_TICKS_INDENT,
+      indentedRadiusForTexts = radius + (2 * constants.GAUGE_TICKS_INDENT) +
+        constants.GAUGE_TICKS_LENGTH;
 
     let startLength = sign ? totalLength : 0;
 
@@ -88,7 +88,7 @@ class MathService {
           new SVGLine(
             toCartesian(indentedRadiusForLines, startAngle),
             toCartesian(
-              indentedRadiusForLines + constants.GAUGE_LINES_LENGTH, startAngle
+              indentedRadiusForLines + constants.GAUGE_TICKS_LENGTH, startAngle
             )
           ),
           new SVGText(

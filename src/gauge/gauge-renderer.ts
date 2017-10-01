@@ -16,31 +16,43 @@ class GaugeRenderer {
         constants.GAUGE_SCALE_RATIO
       );
 
-    Array.from(this.gaugeScaleElements).forEach((element, indx) => {
-      element.setAttribute(
-        'd', SVGService.generateArc(
-          240, 115, 170, segments[indx].start, segments[indx].end
-        )
-      );
-    });
+    Array.from(this.gaugeScaleElements)
+      .forEach((el, indx) => {
+        el.setAttribute(
+          'd', SVGService.generateArc(
+            constants.GAUGE_SCALE_CENTER_X,
+            constants.GAUGE_SCALE_CENTER_Y,
+            constants.GAUGE_SCALE_RADIUS,
+            segments[indx].start,
+            segments[indx].end
+          )
+        );
+      });
   }
 
   public renderAxis() {
     this.gaugeTextPathEl.setAttribute(
       'd', SVGService.generateArc(
-        240, 115,
-        170 + (2 * constants.GAUGE_LINES_INDENT) + constants.GAUGE_LINES_LENGTH,
+        constants.GAUGE_SCALE_CENTER_X,
+        constants.GAUGE_SCALE_CENTER_Y,
+        (
+          constants.GAUGE_SCALE_RADIUS +
+          (2 * constants.GAUGE_TICKS_INDENT) +
+          constants.GAUGE_TICKS_LENGTH
+        ),
         constants.GAUGE_SCALE_START_ANGLE,
         constants.GAUGE_SCALE_END_ANGLE
       )
     );
 
     const axis = mathService.calculateAxis(
-      240, 115, 170,
+      constants.GAUGE_SCALE_CENTER_X,
+      constants.GAUGE_SCALE_CENTER_Y,
+      constants.GAUGE_SCALE_RADIUS,
       constants.GAUGE_SCALE_START_ANGLE,
       constants.GAUGE_SCALE_END_ANGLE,
-      constants.GAUGE_LINES_COUNT,
-      this.gaugeTextPathEl.getTotalLength()
+      constants.GAUGE_TICKS_COUNT,
+      this.gaugeScaleLength
     );
 
     Array.from(this.gaugeLinesElements)
@@ -70,15 +82,10 @@ class GaugeRenderer {
         textPathEl.setAttribute('href', '#gauge-text-path');
         textPathEl.textContent = text.content;
       });
-
-    Array.from(this.gaugeTextsElements)
-      .forEach((el) => {
-        console.dir(el);
-      });
   }
 
-  private attr = (el: Element, name: string, value: string) => {
-    el.setAttributeNS(constants.SVG_XLINK, name, value);
+  public renderHand() {
+
   }
 
   private createElement = (tagName, count = 1): DocumentFragment => {
@@ -108,7 +115,7 @@ class GaugeRenderer {
   private get gaugeLinesElements(): HTMLCollection {
     if (!this.gaugeLinesGroupEl.hasChildNodes()) {
       this.gaugeLinesGroupEl.appendChild(
-        this.createElement('line', constants.GAUGE_LINES_COUNT)
+        this.createElement('line', constants.GAUGE_TICKS_COUNT)
       );
     }
 
@@ -118,7 +125,7 @@ class GaugeRenderer {
   private get gaugeTextsElements(): HTMLCollection {
     if (!this.gaugeTextsGroupEl.hasChildNodes()) {
       this.gaugeTextsGroupEl.appendChild(
-        this.createElement('text', constants.GAUGE_TEXT_COUNT)
+        this.createElement('text', constants.GAUGE_TICKS_TEXT_COUNT)
       );
 
       Array.from(this.gaugeTextsGroupEl.children)
@@ -146,6 +153,10 @@ class GaugeRenderer {
 
   private get gaugeTextPathEl(): SVGPathElement {
     return this.svgEl.querySelector('#gauge-text-path') as SVGPathElement;
+  }
+
+  private get gaugeScaleLength(): number {
+    return this.gaugeTextPathEl.getTotalLength();
   }
 }
 
