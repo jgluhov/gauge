@@ -1,7 +1,6 @@
 import * as constants from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
-import Segment from '../structures/segment';
 import arrayUtil from '../utils/array-util';
 import GaugeRenderer from './gauge-renderer';
 import style = require('./gauge.css');
@@ -44,6 +43,7 @@ class Gauge extends HTMLElement {
 
   private render() {
     this.renderer.renderScale();
+
     this.renderer.renderAxis();
     this.renderer.renderHand();
   }

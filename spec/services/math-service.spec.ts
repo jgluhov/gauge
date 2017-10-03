@@ -212,12 +212,12 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#calcSegments()', () => {
+  describe('#calcSlices()', () => {
     describe('when called with params', () => {
       describe('when passed more then 180 degree', () => {
         describe('when starting point is negative', () => {
           beforeEach(() => {
-            this.segments = mathService.calcSegments(
+            this.segments = mathService.calcSlices(
               - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
             );
           });
@@ -273,7 +273,7 @@ describe('Math Service', () => {
 
         describe('when starting point is positive (reverting)', () => {
           beforeEach(() => {
-            this.segments = mathService.calcSegments(
+            this.segments = mathService.calcSlices(
               7 * Math.PI / 6, - Math.PI / 6, [ 70, 85, 100 ]
             );
           });

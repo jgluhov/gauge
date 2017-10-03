@@ -1,49 +1,40 @@
-import * as constants from '../constants';
+import {
+  HAND_RADIUS,
+  SCALE_CENTER_X,
+  SCALE_CENTER_Y,
+  SCALE_END_ANGLE,
+  SCALE_PATH_COUNT,
+  SCALE_RADIUS,
+  SCALE_RATIO,
+  SCALE_START_ANGLE,
+  TICKS_COUNT,
+  TICKS_INDENT,
+  TICKS_LENGTH
+} from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
 import Point from '../structures/point';
-import Segment from '../structures/segment';
+import Slice from '../structures/slice';
 import arrayUtil from '../utils/array-util';
 
 class GaugeRenderer {
-  private centerX: number;
-  private centerY: number;
-  private scaleRadius: number;
-  private ticksIndent: number;
-  private ticksLength: number;
-  private startAngle: number;
-  private endAngle: number;
-  private scaleRatio: number[];
-  private ticksCount: number;
-
   constructor(private svgEl: SVGElement) {
-    this.centerX = constants.GAUGE_SCALE_CENTER_X;
-    this.centerY = constants.GAUGE_SCALE_CENTER_Y;
-    this.scaleRadius = constants.GAUGE_SCALE_RADIUS;
-    this.startAngle = constants.GAUGE_SCALE_START_ANGLE;
-    this.endAngle = constants.GAUGE_SCALE_END_ANGLE;
-    this.scaleRatio = constants.GAUGE_SCALE_RATIO;
-    this.ticksCount = constants.GAUGE_TICKS_COUNT;
-    this.ticksIndent = constants.GAUGE_TICKS_INDENT;
-    this.ticksLength = constants.GAUGE_TICKS_LENGTH;
   }
 
   public renderScale() {
-    const segs = mathService.calcSegments(
-        this.startAngle,
-        this.endAngle,
-        this.scaleRatio
-      );
+    const slices = mathService.calcSlices(
+      SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
+    );
 
     Array.from(this.gaugeScaleElements)
       .forEach((el, indx) => {
         el.setAttribute(
-          'd', SVGService.generateArc(
-            this.centerX,
-            this.centerY,
-            this.scaleRadius,
-            segs[indx].start,
-            segs[indx].end
+          'd', SVGService.describeArc(
+            SCALE_CENTER_X,
+            SCALE_CENTER_Y,
+            SCALE_RADIUS,
+            slices[indx].startAngle,
+            slices[indx].endAngle
           )
         );
       });
@@ -51,11 +42,12 @@ class GaugeRenderer {
 
   public renderAxis() {
     this.gaugeTextPathEl.setAttribute(
-      'd', SVGService.generateArc(
-        this.centerX, this.centerY,
-        this.scaleRadius + (2 * this.ticksIndent) + this.ticksLength,
-        this.startAngle,
-        this.endAngle
+      'd', SVGService.describeArc(
+        SCALE_CENTER_X,
+        SCALE_CENTER_Y,
+        SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
+        SCALE_START_ANGLE,
+        SCALE_END_ANGLE
       )
     );
 
@@ -77,29 +69,37 @@ class GaugeRenderer {
     const circleEl = this.gaugeHandElements.shift(),
       arrowEl = this.gaugeHandElements.pop();
 
-    circleEl.setAttribute('cx', constants.GAUGE_SCALE_CENTER_X.toString());
-    circleEl.setAttribute('cy', constants.GAUGE_SCALE_CENTER_Y.toString());
-    circleEl.setAttribute('r', constants.GAUGE_HAND_RADIUS.toString());
+    circleEl.setAttribute('cx', SCALE_CENTER_X.toString());
+    circleEl.setAttribute('cy', SCALE_CENTER_Y.toString());
+    circleEl.setAttribute('r', HAND_RADIUS.toString());
 
-    arrowEl.setAttribute('d', SVGService.describeHand());
+    arrowEl.setAttribute('d', SVGService.describeHand(
+      SCALE_CENTER_X,
+      SCALE_CENTER_Y,
+      SCALE_RADIUS,
+      HAND_RADIUS,
+      TICKS_INDENT,
+      TICKS_LENGTH
+    ));
+
     arrowEl.setAttribute('transform', `
-      translate(${2 * constants.GAUGE_SCALE_CENTER_X},0)
+      translate(${2 * SCALE_CENTER_X},0)
       scale(-1, 1)
       rotate(
-        ${mathService.radiansToHandPosition(constants.GAUGE_SCALE_START_ANGLE)}
-        ${constants.GAUGE_SCALE_CENTER_X} ${constants.GAUGE_SCALE_CENTER_Y}
+        ${mathService.radiansToHandPosition(SCALE_START_ANGLE)}
+        ${SCALE_CENTER_X} ${SCALE_CENTER_Y}
       )
     `);
   }
 
   private renderTicks() {
     const ticks = mathService.generateTicks(
-      this.centerX,
-      this.centerY,
-      this.startAngle,
-      this.endAngle,
-      this.scaleRadius + this.ticksIndent,
-      this.ticksCount
+      SCALE_CENTER_X,
+      SCALE_CENTER_Y,
+      SCALE_START_ANGLE,
+      SCALE_END_ANGLE,
+      SCALE_RADIUS + TICKS_INDENT,
+      TICKS_COUNT
     );
 
     Array.from(this.gaugeLinesElements)
@@ -150,7 +150,7 @@ class GaugeRenderer {
   private get gaugeScaleElements(): SVGElement[] {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
       this.gaugeScaleGroupEl.appendChild(
-        this.createElement('path', constants.GAUGE_SCALE_PATH_COUNT)
+        this.createElement('path', SCALE_PATH_COUNT)
       );
     }
 
@@ -160,7 +160,7 @@ class GaugeRenderer {
   private get gaugeLinesElements(): SVGElement[] {
     if (!this.gaugeLinesGroupEl.hasChildNodes()) {
       this.gaugeLinesGroupEl.appendChild(
-        this.createElement('line', constants.GAUGE_TICKS_COUNT)
+        this.createElement('line', TICKS_COUNT)
       );
     }
 
@@ -170,7 +170,7 @@ class GaugeRenderer {
   private get gaugeTextsElements(): SVGElement[] {
     if (!this.gaugeTextsGroupEl.hasChildNodes()) {
       this.gaugeTextsGroupEl.appendChild(
-        this.createElement('text', constants.GAUGE_TICKS_TEXT_COUNT)
+        this.createElement('text', TICKS_COUNT)
       );
 
       Array.from(this.gaugeTextsGroupEl.children)

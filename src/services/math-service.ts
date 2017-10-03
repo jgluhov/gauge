@@ -1,7 +1,9 @@
-import * as constants from '../constants';
+import {
+  TICKS_LENGTH
+} from '../constants';
 import Axle from '../structures/axle';
 import Point from '../structures/point';
-import Segment from '../structures/segment';
+import Slice from '../structures/slice';
 import SVGText from '../structures/svg-text';
 import Tick from '../structures/tick';
 import utilService from '../utils/array-util';
@@ -42,22 +44,22 @@ class MathService {
 
   public normalizeAngle = (angle) => angle % (2 * Math.PI);
 
-  public calcSegments = (
-    start: number = 0,
-    end: number = 0,
-    ratio: number[]
-  ): Segment[] => {
-    const interval = this.calcCentralAngle(start, end),
-      calcRatio = this.calcRatio.bind(this, interval),
-      sign = Math.sign(end - start);
+  public calcSlices = (startAngle, endAngle, scaleRatio) => {
 
-    return ratio.reduce(
-      (segments, percent: number, indx: number, array: number[]) => {
-        const step = calcRatio(array[indx]) - (calcRatio(array[indx - 1])),
-          segment = new Segment(start, start + (sign * step));
+    const centralAngle = this.calcCentralAngle(startAngle, endAngle),
+      calcRatio = this.calcRatio.bind(this, centralAngle);
 
-        start = segment.end;
-        return [...segments, segment];
+    let prevRatio = 0;
+
+    return scaleRatio.reduce(
+      (slices: Slice[], ratio: number) => {
+        const segment = calcRatio(ratio) - (calcRatio(prevRatio)),
+          slice = new Slice(startAngle, startAngle + segment);
+
+        startAngle = slice.endAngle;
+        prevRatio = ratio;
+
+        return [...slices, slice];
       }, []);
   }
 
@@ -81,7 +83,7 @@ class MathService {
         ticks.push(
           new Tick(
             toCartesian(radius, angle),
-            toCartesian(radius + constants.GAUGE_TICKS_LENGTH, angle)
+            toCartesian(radius + TICKS_LENGTH, angle)
           )
         );
 
@@ -137,8 +139,8 @@ class MathService {
     //   }, []);
   }
 
-  public calcRatio = (total: number = 0, percent: number = 0): number => {
-    return total * percent / 100;
+  public calcRatio = (centralAngle: number = 0, ratio: number = 0): number => {
+    return centralAngle * ratio / 100;
   }
 
   public calcStep = (total: number = 0, count: number = 0): number => {
