@@ -212,12 +212,12 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#calcSlices()', () => {
+  describe('#generateSlices()', () => {
     describe('when called with params', () => {
       describe('when passed more then 180 degree', () => {
         describe('when starting point is negative', () => {
           beforeEach(() => {
-            this.segments = mathService.calcSlices(
+            this.segments = mathService.generateSlices(
               - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
             );
           });
@@ -228,12 +228,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(- Math.PI / 6);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(23 * Math.PI / 30);
             });
           });
@@ -244,12 +244,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(23 * Math.PI / 30);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(29 * Math.PI / 30);
             });
           });
@@ -260,12 +260,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(29 * Math.PI / 30);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(7 * Math.PI / 6);
             });
           });
@@ -273,7 +273,7 @@ describe('Math Service', () => {
 
         describe('when starting point is positive (reverting)', () => {
           beforeEach(() => {
-            this.segments = mathService.calcSlices(
+            this.segments = mathService.generateSlices(
               7 * Math.PI / 6, - Math.PI / 6, [ 70, 85, 100 ]
             );
           });
@@ -284,12 +284,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(7 * Math.PI / 6);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(7 * Math.PI / 30);
             });
           });
@@ -300,12 +300,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(7 * Math.PI / 30);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(Math.PI / 30);
             });
           });
@@ -316,12 +316,12 @@ describe('Math Service', () => {
             });
 
             it('should return correct start of first endpoint', () => {
-              expect(this.segment.start)
+              expect(this.segment.startAngle)
                 .toBeCloseTo(Math.PI / 30);
             });
 
             it('should return correct end of first endpoint', () => {
-              expect(this.segment.end)
+              expect(this.segment.endAngle)
                 .toBeCloseTo(- Math.PI / 6);
             });
           });
@@ -352,12 +352,6 @@ describe('Math Service', () => {
   });
 
   describe('#calculateInterval()', () => {
-    describe('when called without params', () => {
-      it('should return zero', () => {
-        expect(mathService.calcCentralAngle()).toEqual(0);
-      });
-    });
-
     describe('when called with params', () => {
       describe('when pass points within 2 PI', () => {
         it('should return correct result once', () => {

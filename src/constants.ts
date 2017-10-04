@@ -13,6 +13,7 @@ export const SCALE_RADIUS = 170;
 export const TICKS_COUNT = 7;
 export const TICKS_INDENT = 8;
 export const TICKS_LENGTH = 3;
-export const TICKS_TEXT_INDENT = 8;
+export const TICKS_TEXT_INDENT = 3;
+export const TICKS_POSITION_INDENT = 3.5;
 
 export const HAND_RADIUS = 10;

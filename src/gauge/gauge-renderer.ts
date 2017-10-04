@@ -22,7 +22,7 @@ class GaugeRenderer {
   }
 
   public renderScale() {
-    const slices = mathService.calcSlices(
+    const slices = mathService.generateSlices(
       SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
     );
 
@@ -62,7 +62,7 @@ class GaugeRenderer {
     // );
 
     this.renderTicks();
-    // this.renderTexts(axis);
+    this.renderTexts();
   }
 
   public renderHand() {
@@ -115,19 +115,30 @@ class GaugeRenderer {
     );
   }
 
-  private renderTexts(axis: IAxis) {
+  private renderTexts() {
+    const texts = mathService.generateTexts(
+      SCALE_CENTER_X,
+      SCALE_CENTER_Y,
+      SCALE_RADIUS,
+      SCALE_START_ANGLE,
+      SCALE_END_ANGLE,
+      TICKS_COUNT,
+      this.gaugeScaleLength
+    );
+
     Array.from(this.gaugeTextsElements)
       .forEach((el, i: number) => {
         const textPathEl = el.firstElementChild,
-          text = axis[i].text;
+          text = texts[i];
 
-        el.setAttribute('x', text.x.toString());
-        el.setAttribute('text-anchor', 'middle');
-        // el.setAttribute('transform', `
-        //   translate(${2 * text.p.x},0)
-        //   scale(-1, 1)
-        //   rotate(${text.degree} ${text.p.x} ${text.p.y})
-        // `);
+        el.setAttribute('x', text.position.toString());
+        el.setAttribute('text-anchor', 'start');
+        el.setAttribute('transform', `
+          translate(${2 * text.point.x},0)
+          scale(-1, 1)
+          rotate(${text.degree} ${text.point.x} ${text.point.y})
+        `);
+
         textPathEl.setAttribute('href', '#gauge-text-path');
         textPathEl.textContent = text.content;
       });

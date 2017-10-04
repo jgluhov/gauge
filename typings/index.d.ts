@@ -10,7 +10,6 @@ declare module '*.css' {
     export = content;
 }
 
-
 interface IPoint {
   x: number;
   y: number;
@@ -21,21 +20,19 @@ interface ITick {
   p2: IPoint;
 }
 
-interface ISVGText {
-  x: number;
+interface IText {
+  position: number;
   content: string;
-  p: IPoint;
+  point: IPoint;
   degree: number;
 }
 
 interface IAxle {
   tick: ITick;
-  text: ISVGText;
+  text: IText;
 }
 
 interface ISlice {
   startAngle: number;
   endAngle: number;
 }
-
-type IAxis = IAxle[];
