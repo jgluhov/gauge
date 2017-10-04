@@ -24,17 +24,19 @@ class GaugeRenderer {
   public renderScale() {
     const slices = mathService.generateSlices(
       SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
-    );
+    )();
 
     Array.from(this.gaugeScaleElements)
       .forEach((el, indx) => {
+        const slice = slices.next().value;
+
         el.setAttribute(
           'd', SVGService.describeArc(
             SCALE_CENTER_X,
             SCALE_CENTER_Y,
             SCALE_RADIUS,
-            slices[indx].startAngle,
-            slices[indx].endAngle
+            slice.startAngle,
+            slice.endAngle
           )
         );
       });
@@ -100,12 +102,12 @@ class GaugeRenderer {
       SCALE_END_ANGLE,
       SCALE_RADIUS + TICKS_INDENT,
       TICKS_COUNT
-    );
+    )();
 
     Array.from(this.gaugeLinesElements)
       .forEach((el, i) => {
         const attr = el.setAttribute.bind(el),
-          tick = ticks[i];
+          tick = ticks.next().value;
 
         attr('x1', tick.p1.x);
         attr('y1', tick.p1.y);
@@ -124,12 +126,12 @@ class GaugeRenderer {
       SCALE_END_ANGLE,
       TICKS_COUNT,
       this.gaugeScaleLength
-    );
+    )();
 
     Array.from(this.gaugeTextsElements)
       .forEach((el, i: number) => {
         const textPathEl = el.firstElementChild,
-          text = texts[i];
+          text = texts.next().value;
 
         el.setAttribute('x', text.position.toString());
         el.setAttribute('text-anchor', 'start');

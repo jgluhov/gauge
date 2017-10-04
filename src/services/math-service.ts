@@ -49,48 +49,53 @@ class MathService {
     const centralAngle = this.calcCentralAngle(startAngle, endAngle),
       calcRatio = this.calcRatio.bind(this, centralAngle);
 
-    let prevRatio = 0;
+    function* slices() {
+      let i = 0,
+        prevRatio = 0;
 
-    return scaleRatio.reduce(
-      (slices: ISlice[], ratio: number) => {
-        const segment = calcRatio(ratio) - (calcRatio(prevRatio)),
+      while (i < scaleRatio.length) {
+        const segment = calcRatio(scaleRatio[i]) - (calcRatio(prevRatio)),
           slice = new Slice(startAngle, startAngle + segment);
 
-        startAngle = slice.endAngle;
-        prevRatio = ratio;
+        yield slice;
 
-        return [...slices, slice];
-      }, []);
+        startAngle = slice.endAngle;
+        prevRatio = scaleRatio[i];
+        i++;
+      }
+    }
+
+    return slices;
   }
 
   public generateTicks = (
-    centerX: number,
-    centerY: number,
-    startAngle: number,
-    endAngle: number,
-    radius: number,
-    ticksCount: number
+      centerX: number,
+      centerY: number,
+      startAngle: number,
+      endAngle: number,
+      radius: number,
+      ticksCount: number
   ) => {
     const toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
       centralAngle = this.calcCentralAngle(startAngle, endAngle),
-      step = this.calcStep(centralAngle, ticksCount);
+      stepAngle = this.calcStep(centralAngle, ticksCount);
 
-    let angle = startAngle;
+    function* ticks() {
+      let i = 0,
+        angle = startAngle;
 
-    return new Array(ticksCount)
-      .fill(0)
-      .reduce((ticks: ITick[]) => {
-        ticks.push(
-          new Tick(
-            toCartesian(radius, angle),
-            toCartesian(radius + TICKS_LENGTH, angle)
-          )
+      while (i < ticksCount) {
+        yield new Tick(
+          toCartesian(radius, angle),
+          toCartesian(radius + TICKS_LENGTH, angle)
         );
 
-        angle += step;
+        angle += stepAngle;
+        i++;
+      }
+    }
 
-        return ticks;
-      }, []);
+    return ticks;
   }
 
   public generateTexts = (
@@ -106,32 +111,32 @@ class MathService {
       stepAngle = this.calcStep(centralAngle, ticksCount),
       stepPosition = this.calcStep(totalLength, ticksCount),
       toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
+      toDegree = this.radiansToDegree.bind(this),
       textsRadius = radius + (2 * TICKS_INDENT) + TICKS_LENGTH;
 
-    let prevPosition = totalLength,
-      prevAngle = endAngle;
+    function* texts() {
+      let i = 0,
+        prevPosition = totalLength,
+        prevAngle = endAngle;
 
-    return new Array(ticksCount)
-      .fill(0)
-      .reduce(
-        (texts: IText[], item, i: number) => {
-          const text = new Text(
-            Math.min(
-              totalLength - 5,
-              Math.max(prevPosition - TICKS_POSITION_INDENT, 5)
-            ),
-            i.toString(),
-            toCartesian(textsRadius + TICKS_TEXT_INDENT, prevAngle),
-            this.radiansToDegree(Math.PI / 2 - prevAngle)
-          );
+      while (i < ticksCount) {
+        yield new Text(
+          Math.min(
+            totalLength - 5,
+            Math.max(prevPosition - TICKS_POSITION_INDENT, 5)
+          ),
+          i.toString(),
+          toCartesian(textsRadius + TICKS_TEXT_INDENT, prevAngle),
+          toDegree(Math.PI / 2 - prevAngle)
+        );
 
-          prevAngle -=  stepAngle;
-          prevPosition -= stepPosition;
+        prevAngle -=  stepAngle;
+        prevPosition -= stepPosition;
+        i++;
+      }
+    }
 
-          return [...texts, text];
-        },
-        []
-      );
+    return texts;
   }
 
   public calcRatio = (centralAngle: number = 0, ratio: number = 0): number => {
