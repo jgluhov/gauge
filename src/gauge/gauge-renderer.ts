@@ -65,11 +65,19 @@ class GaugeRenderer {
     ));
   }
 
-  public rotateHand(rotateAngle: number) {
-    const arrowEl = this.gaugeHandElements.pop();
+  public rotateHand(position: number) {
+    const arrowEl = this.gaugeHandElements.pop(),
+      centralAngle = mathService.calcCentralAngle(
+        SCALE_START_ANGLE,
+        SCALE_END_ANGLE
+      ),
+      positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
+        centralAngle,
+        position
+      );
 
     arrowEl.setAttribute('transform',
-      SVGService.describeRotation(SCALE_END_ANGLE)
+      SVGService.describeRotation(positionAngle)
     );
   }
 
