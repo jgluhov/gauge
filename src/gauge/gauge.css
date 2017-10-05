@@ -1,6 +1,7 @@
 :host {
   display: block;
-  height: 100%;
+  height: 320px;
+  width: 480px;
 }
 
 .gauge {
@@ -15,7 +16,7 @@
 }
 
 #gauge-scale-group > path:nth-child(1) {
-  stroke: #fb000e;  
+  stroke: #fb000e;
 }
 
 #gauge-scale-group > path:nth-child(2) {

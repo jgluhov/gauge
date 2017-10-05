@@ -1,5 +1,8 @@
 import {
-  DRAW_ACCURACY
+  DRAW_ACCURACY,
+  SCALE_CENTER_X,
+  SCALE_CENTER_Y,
+  SCALE_END_ANGLE
 } from '../constants';
 
 import Point from '../structures/point';
@@ -50,6 +53,17 @@ class SVGService {
       L${point.x}                  ${point.y},
       L${centerX + handRadius / 2} ${centerY}
       Z
+    `;
+  }
+
+  public describeRotation = (rotateAngle: number): string => {
+    return `
+      translate(${2 * SCALE_CENTER_X},0)
+      scale(-1, 1)
+      rotate(
+        ${mathService.radiansToHandPosition(rotateAngle)}
+        ${SCALE_CENTER_X} ${SCALE_CENTER_Y}
+      )
     `;
   }
 }

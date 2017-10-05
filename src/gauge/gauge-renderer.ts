@@ -24,7 +24,7 @@ class GaugeRenderer {
   public renderScale() {
     const slices = mathService.generateSlices(
       SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
-    )();
+    );
 
     Array.from(this.gaugeScaleElements)
       .forEach((el, indx) => {
@@ -43,26 +43,6 @@ class GaugeRenderer {
   }
 
   public renderAxis() {
-    this.gaugeTextPathEl.setAttribute(
-      'd', SVGService.describeArc(
-        SCALE_CENTER_X,
-        SCALE_CENTER_Y,
-        SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
-        SCALE_START_ANGLE,
-        SCALE_END_ANGLE
-      )
-    );
-
-    // const axis = mathService.calcAxis(
-    //   this.centerX,
-    //   this.centerY,
-    //   this.scaleRadius,
-    //   this.startAngle,
-    //   this.endAngle,
-    //   this.ticksCount,
-    //   this.gaugeScaleLength
-    // );
-
     this.renderTicks();
     this.renderTexts();
   }
@@ -83,15 +63,14 @@ class GaugeRenderer {
       TICKS_INDENT,
       TICKS_LENGTH
     ));
+  }
 
-    arrowEl.setAttribute('transform', `
-      translate(${2 * SCALE_CENTER_X},0)
-      scale(-1, 1)
-      rotate(
-        ${mathService.radiansToHandPosition(SCALE_START_ANGLE)}
-        ${SCALE_CENTER_X} ${SCALE_CENTER_Y}
-      )
-    `);
+  public rotateHand(rotateAngle: number) {
+    const arrowEl = this.gaugeHandElements.pop();
+
+    arrowEl.setAttribute('transform',
+      SVGService.describeRotation(SCALE_END_ANGLE)
+    );
   }
 
   private renderTicks() {
@@ -102,7 +81,7 @@ class GaugeRenderer {
       SCALE_END_ANGLE,
       SCALE_RADIUS + TICKS_INDENT,
       TICKS_COUNT
-    )();
+    );
 
     Array.from(this.gaugeLinesElements)
       .forEach((el, i) => {
@@ -118,6 +97,16 @@ class GaugeRenderer {
   }
 
   private renderTexts() {
+    this.gaugeTextPathEl.setAttribute(
+      'd', SVGService.describeArc(
+        SCALE_CENTER_X,
+        SCALE_CENTER_Y,
+        SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
+        SCALE_START_ANGLE,
+        SCALE_END_ANGLE
+      )
+    );
+
     const texts = mathService.generateTexts(
       SCALE_CENTER_X,
       SCALE_CENTER_Y,
@@ -126,7 +115,7 @@ class GaugeRenderer {
       SCALE_END_ANGLE,
       TICKS_COUNT,
       this.gaugeScaleLength
-    )();
+    );
 
     Array.from(this.gaugeTextsElements)
       .forEach((el, i: number) => {

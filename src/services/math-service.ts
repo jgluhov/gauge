@@ -65,7 +65,7 @@ class MathService {
       }
     }
 
-    return slices;
+    return slices();
   }
 
   public generateTicks = (
@@ -95,7 +95,7 @@ class MathService {
       }
     }
 
-    return ticks;
+    return ticks();
   }
 
   public generateTexts = (
@@ -136,7 +136,7 @@ class MathService {
       }
     }
 
-    return texts;
+    return texts();
   }
 
   public calcRatio = (centralAngle: number = 0, ratio: number = 0): number => {

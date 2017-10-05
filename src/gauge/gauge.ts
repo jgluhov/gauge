@@ -12,7 +12,9 @@ class Gauge extends HTMLElement {
   private renderer: GaugeRenderer;
 
   static get observedAttributes(): string[] {
-    return [];
+    return [
+      'value'
+    ];
   }
 
   constructor() {
@@ -39,6 +41,9 @@ class Gauge extends HTMLElement {
     oldValue: string,
     newValue: string
   ) {
+    if (attr === 'value') {
+      this.renderer.rotateHand(Number(newValue));
+    }
   }
 
   private render() {
