@@ -76,9 +76,30 @@ class GaugeRenderer {
         position
       );
 
-    arrowEl.setAttribute('transform',
-      SVGService.describeRotation(positionAngle)
-    );
+    this.animate(
+      (timeFraction) => {
+        arrowEl.setAttribute('transform', SVGService.describeRotation(
+          positionAngle
+        ));
+      }, 1000);
+  }
+
+  private animate(handler, duration) {
+    const start = performance.now();
+
+    requestAnimationFrame(function animate(timestamp) {
+      let timePassed = timestamp - start;
+
+      if (timePassed > duration) {
+        timePassed = duration;
+      }
+
+      handler(timePassed);
+
+      if (timePassed < duration) {
+        requestAnimationFrame(animate);
+      }
+    });
   }
 
   private renderTicks() {
