@@ -2,6 +2,7 @@ import * as constants from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
 import arrayUtil from '../utils/array-util';
+import DOMUtil from '../utils/dom-util';
 import GaugeRenderer from './gauge-renderer';
 import style = require('./gauge.css');
 import template from './gauge.html';
@@ -24,7 +25,7 @@ class Gauge extends HTMLElement {
       mode: 'open'
     });
 
-    this.root = this.createShadowRoot();
+    this.root = DOMUtil.createShadowRoot(template, style);
     this.svgEl = this.root.querySelector('svg');
     this.renderer = new GaugeRenderer(this.svgEl);
 
@@ -48,29 +49,8 @@ class Gauge extends HTMLElement {
 
   private render() {
     this.renderer.renderScale();
-
     this.renderer.renderAxis();
     this.renderer.renderHand();
-  }
-
-  /**
-   * private createShadowRoot - creates svg element
-   * with certain namespaces to work with further.
-   *
-   * @return {DocumentFragment} svg  / 4lement to display gauge
-   */
-  private createShadowRoot = (): DocumentFragment => {
-    const templateEl = document.createElement('template'),
-      styleEl = document.createElement('style'),
-      content = document.createDocumentFragment();
-
-    templateEl.innerHTML = template;
-    styleEl.innerHTML = style;
-
-    content.appendChild(styleEl);
-    content.appendChild(templateEl.content);
-
-    return content;
   }
 }
 

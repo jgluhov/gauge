@@ -23,7 +23,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: helper.root('src', 'gauge'),
+        exclude: [
+          helper.root('src', 'gauge'),
+          helper.root('src', 'slider')
+        ],
         loader: ExtractTextWebpackPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader?sourceMap'
@@ -31,7 +34,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: helper.root('src', 'gauge'),
+        include: [
+          helper.root('src', 'gauge'),
+          helper.root('src', 'slider')
+        ],
         loader: 'raw-loader'
       },
       {

@@ -10,6 +10,10 @@ declare module '*.css' {
     export = content;
 }
 
+interface IArrayLike {
+  length: number;
+}
+
 interface IPoint {
   x: number;
   y: number;

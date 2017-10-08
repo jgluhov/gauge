@@ -1,0 +1,13 @@
+:host {
+  outline: 1px solid #dcdcdc;
+}
+
+:host,
+:host > input[type="range"] {
+  height: 40px;
+  width: 100%;
+}
+
+:host > input[type="range"] {
+  margin: 0;
+}

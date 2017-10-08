@@ -1,22 +1,4 @@
-interface IArrayLike {
-  length: number;
-}
-
-class ArrayUtil<T> {
-  public zip = (...args: T[][]): T[][]  => {
-    if (!args.length) {
-      return args;
-    }
-
-    const shortest = args.reduce((a: T[], b: T[]) => {
-      return a.length < b.length ? a : b;
-    }, args.slice().shift());
-
-    return shortest.map(
-      (_, i: number) => args.map((array: T[]) => array[i])
-    );
-  }
-
+class ArrayUtil {
   public size = (array: IArrayLike = []): number => {
     return array.length;
   }

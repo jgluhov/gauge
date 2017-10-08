@@ -17,18 +17,4 @@ body {
   width: 480px;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.slider {
-  outline: 1px solid #dcdcdc;
-}
-
-.slider,
-.slider > input[type="range"] {
-  height: 40px;
-  width: 100%;
-}
-
-.slider > input[type="range"] {
-  margin: 0;
-}
+}  
