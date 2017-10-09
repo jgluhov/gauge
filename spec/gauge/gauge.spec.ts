@@ -39,16 +39,4 @@ describe('Gauge', () => {
       });
     });
   });
-
-  describe('SVG', () => {
-
-    describe('#createShadowRoot()', () => {
-      describe('when its called', () => {
-        it('should return SVGElement', () => {
-          expect(this.gaugeEl.createShadowRoot())
-            .toEqual(jasmine.any(Node));
-        });
-      });
-    });
-  });
 });

@@ -78,9 +78,9 @@ class GaugeRenderer {
 
     this.animate(
       (timeFraction) => {
-        arrowEl.setAttribute('transform', SVGService.describeRotation(
-          positionAngle
-        ));
+        arrowEl.setAttribute('transform',
+          SVGService.describeRotation(positionAngle)
+        );
       }, 1000);
   }
 

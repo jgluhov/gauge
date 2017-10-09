@@ -213,20 +213,19 @@ describe('Math Service', () => {
     });
   });
 
-  describe('#generateSlices()', () => {
+  describe('#§s()', () => {
     describe('when called with params', () => {
       describe('when passed more then 180 degree', () => {
+        beforeEach(() => {
+          this.slices = mathService.generateSlices(
+            - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
+          );
+        });
 
         describe('when starting point is negative', () => {
-          beforeEach(() => {
-            this.slices = mathService.generateSlices(
-              - Math.PI / 6, 7 * Math.PI / 6, [ 70, 85, 100 ]
-            );
-          });
-
           describe('checking first slice', () => {
             beforeEach(() => {
-              this.slice = this.slices[0];
+              this.slice = this.slices.next().value;
             });
 
             it('should return correct start of first endpoint', () => {
@@ -242,7 +241,8 @@ describe('Math Service', () => {
 
           describe('checking second slice', () => {
             beforeEach(() => {
-              this.slice = this.slices[1];
+              this.slices.next();
+              this.slice = this.slices.next().value;
             });
 
             it('should return correct start of first endpoint', () => {
@@ -258,7 +258,9 @@ describe('Math Service', () => {
 
           describe('checking third slice', () => {
             beforeEach(() => {
-              this.slice = this.slices[2];
+              this.slices.next();
+              this.slices.next();
+              this.slice = this.slices.next().value;
             });
 
             it('should return correct start of first endpoint', () => {
