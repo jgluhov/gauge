@@ -18,6 +18,8 @@ import Slice from '../structures/slice';
 import arrayUtil from '../utils/array-util';
 
 class GaugeRenderer {
+  private prevPositionAngle: number = SCALE_END_ANGLE;
+
   constructor(private svgEl: SVGElement) {
   }
 
@@ -74,17 +76,24 @@ class GaugeRenderer {
       positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
         centralAngle,
         position
-      );
+      ),
+      direction = this.prevPositionAngle > positionAngle ? -1 : 1,
+      slice = Math.abs(this.prevPositionAngle - positionAngle);
 
     this.animate(
       (timeFraction) => {
+        const time = (timeFraction / 1000) * 2;
         arrowEl.setAttribute('transform',
-          SVGService.describeRotation(positionAngle)
+          SVGService.describeRotation(this.prevPositionAngle + direction * (time * slice))
         );
-      }, 1000);
+      },
+      500,
+      () => {
+        this.prevPositionAngle = positionAngle;
+      });
   }
 
-  private animate(handler, duration) {
+  private animate(handler, duration, complete) {
     const start = performance.now();
 
     requestAnimationFrame(function animate(timestamp) {
@@ -98,6 +107,8 @@ class GaugeRenderer {
 
       if (timePassed < duration) {
         requestAnimationFrame(animate);
+      } else {
+        complete();
       }
     });
   }
