@@ -40,3 +40,8 @@ interface ISlice {
   startAngle: number;
   endAngle: number;
 }
+
+interface IThrottleOptions {
+  leading: boolean;
+  trailing: boolean;
+}

@@ -1,5 +1,5 @@
 import DOMUtil from '../utils/dom-util';
-import style = require('./style.css');
+import style = require('./styles.css');
 import template from './template.html';
 
 export default class Slider extends HTMLElement {

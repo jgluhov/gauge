@@ -17,3 +17,6 @@ export const TICKS_TEXT_INDENT = 3;
 export const TICKS_POSITION_INDENT = 3.5;
 
 export const HAND_RADIUS = 10;
+export const ANIMATION_DURATION = 50;
+
+export const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';

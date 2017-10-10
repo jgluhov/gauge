@@ -3,14 +3,14 @@ import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
 import arrayUtil from '../utils/array-util';
 import DOMUtil from '../utils/dom-util';
-import GaugeRenderer from './gauge-renderer';
-import style = require('./gauge.css');
-import template from './gauge.html';
+import Renderer from './renderer';
+import style = require('./styles.css');
+import template from './template.html';
 
 class Gauge extends HTMLElement {
   private root: DocumentFragment;
   private svgEl: SVGElement;
-  private renderer: GaugeRenderer;
+  private renderer: Renderer;
 
   static get observedAttributes(): string[] {
     return [
@@ -27,7 +27,7 @@ class Gauge extends HTMLElement {
 
     this.root = DOMUtil.createShadowRoot(template, style);
     this.svgEl = this.root.querySelector('svg');
-    this.renderer = new GaugeRenderer(this.svgEl);
+    this.renderer = new Renderer(this.svgEl);
 
     this.render();
 

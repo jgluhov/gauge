@@ -1,3 +1,3 @@
-import Gauge from '../src/gauge/gauge';
+import Gauge from '../src/gauge';
 
 window.customElements.define('app-gauge', Gauge);
