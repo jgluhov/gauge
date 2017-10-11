@@ -8,7 +8,6 @@ import Point from '../structures/point';
 import Slice from '../structures/slice';
 import Text from '../structures/text';
 import Tick from '../structures/tick';
-import utilService from '../utils/array-util';
 
 class MathService {
   public multiply(...numbers): number {

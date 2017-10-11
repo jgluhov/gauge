@@ -1,7 +1,6 @@
 import * as constants from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
-import arrayUtil from '../utils/array-util';
 import DOMUtil from '../utils/dom-util';
 import Renderer from './renderer';
 import style = require('./styles.css');

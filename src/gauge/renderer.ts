@@ -18,7 +18,6 @@ import SVGService from '../services/svg-service';
 import Point from '../structures/point';
 import Slice from '../structures/slice';
 import animateUtil from '../utils/animate-util';
-import arrayUtil from '../utils/array-util';
 import DOMUtil from '../utils/dom-util';
 import Elements from './elements';
 
