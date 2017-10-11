@@ -12,7 +12,7 @@ class DOMUtil {
    * private createShadowRoot - creates svg element
    * with certain namespaces to work with further.
    *
-   * @return {DocumentFragment} svg  / 4lement to display gauge
+   * @return {DocumentFragment} svg element to display gauge
    */
   public createShadowRoot = (template, style): DocumentFragment => {
     const templateEl = document.createElement('template'),
