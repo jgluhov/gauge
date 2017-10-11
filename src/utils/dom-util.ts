@@ -36,7 +36,7 @@ class DOMUtil {
         fragment.appendChild(element);
         return fragment;
       }, document.createDocumentFragment());
-  }  
+  }
 }
 
 export default new DOMUtil();

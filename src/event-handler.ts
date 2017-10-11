@@ -11,7 +11,7 @@ function handleReady() {
   document.addEventListener('sliderChange',
     throttle((e: CustomEvent) => {
       gaugeEl.setAttribute('value', e.detail.value);
-    }, ANIMATION_DURATION * 2)
+    }, 20)
   );
 }
 

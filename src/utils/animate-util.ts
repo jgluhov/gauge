@@ -1,3 +1,13 @@
+import { flow } from 'lodash';
+import {
+  ANIMATION_DAMPING_PART,
+  ANIMATION_DURATION,
+  ANIMATION_MOVEMENT_PART,
+  DAMPING_EQ_A,
+  DAMPING_EQ_B,
+  DAMPING_EQ_C
+} from '../constants';
+
 import SVGService from '../services/svg-service';
 
 class AnimateUtil {
@@ -10,12 +20,36 @@ class AnimateUtil {
     this.stopAnimation();
 
     this.animate((timeFraction) => {
-      const time = (timeFraction / 1000) * (1000 / duration);
+      const step = timeFraction / (duration * ANIMATION_MOVEMENT_PART);
 
       arrowEl.setAttribute('transform',
-        SVGService.describeRotation(startAngle + direction * (time * slice))
+        SVGService.describeRotation((startAngle + direction * (step * slice)))
       );
-    }, duration, () => handleComplete(endAngle));
+
+    },
+    duration * ANIMATION_MOVEMENT_PART,
+    () => {
+      this.animate((timeFraction) => {
+        const step = timeFraction / (duration * ANIMATION_DAMPING_PART),
+          shouldDamp = slice ? 1 : 0;
+
+        arrowEl.setAttribute('transform',
+          SVGService.describeRotation(endAngle + shouldDamp * this.damping(step))
+        );
+      },
+      duration * ANIMATION_DAMPING_PART,
+      () => {
+        arrowEl.setAttribute('transform',
+          SVGService.describeRotation(endAngle)
+        );
+        handleComplete(endAngle);
+      });
+    });
+  }
+
+  private damping(time: number): number {
+    return DAMPING_EQ_A *
+      (Math.sin( DAMPING_EQ_B * time ) * Math.exp( -DAMPING_EQ_C * time ));
   }
 
   private animate(handler, duration, handleComplete) {
@@ -31,7 +65,7 @@ class AnimateUtil {
         timePassed = duration;
       }
 
-      handler(timePassed);
+      handler(Math.abs(timePassed));
 
       if (timePassed < duration) {
         this.requestAnimationFrameId = requestAnimationFrame(handleAnimate);
