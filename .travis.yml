@@ -6,6 +6,8 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+notifications:
+  email: false
 language: node_js
 node_js:
   - 7
