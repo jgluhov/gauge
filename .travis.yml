@@ -1,3 +1,4 @@
+sudo: false
 dist: trusty
 addons:
   apt:
@@ -7,12 +8,16 @@ addons:
       - google-chrome-stable
 language: node_js
 node_js:
-  - "7"
+  - 7
+  - iojs
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - "npm install -g npm@^2"
+before_script:
+  - npm prune
+  - echo "module.exports = require('./config/karma.ci');" > karma.conf.js
 install:
   - npm install
 script:
-  - npm run ci
+  - npm run test
