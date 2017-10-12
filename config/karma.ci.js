@@ -5,16 +5,16 @@ const webpackMerge = require('webpack-merge'),
 
     const _config = webpackMerge(devConfig, {
       files: [
-        'spec/main.ts',
-        'spec/**/*.spec.ts',
-        'spec/fixtures/*.fixture.html'
+        '../spec/main.ts',
+        '../spec/**/*.spec.ts',
+        '../spec/fixtures/*.fixture.html'
       ],
 
       preprocessors: {
-        'spec/main.ts': ['webpack'],
-        'src/**/*.ts': ['webpack'],
-        'spec/**/*.spec.ts': ['webpack'],
-        'spec/fixtures/*.fixture.html': ['html2js'],
+        '../spec/main.ts': ['webpack'],
+        '../src/**/*.ts': ['webpack'],
+        '../spec/**/*.spec.ts': ['webpack'],
+        '../spec/fixtures/*.fixture.html': ['html2js'],
       },
 
       reporters: ['progress'],
