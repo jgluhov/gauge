@@ -1,9 +1,9 @@
 const webpackMerge = require('webpack-merge'),
-  devConfig = require('./karma.dev');
+  commonConfig = require('./karma.common');
 
   module.exports = function(config) {
 
-    const _config = webpackMerge(devConfig, {
+    const _config = webpackMerge(commonConfig, {
       files: [
         'spec/main.ts',
         'spec/**/*.spec.ts',
