@@ -19,14 +19,18 @@ import Point from '../structures/point';
 import Slice from '../structures/slice';
 import animateUtil from '../utils/animate-util';
 import DOMUtil from '../utils/dom-util';
+import { sliderValue$ } from '../utils/rx-util';
 import Elements from './elements';
 
 class Renderer {
-  private currentAngle: number = (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2;
+  private currentAngle: number = (
+    SCALE_END_ANGLE - (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2
+  );
   private elements: Elements;
 
   constructor(svgEl: SVGElement) {
     this.elements = new Elements(svgEl);
+    this.handleRotating();
   }
 
   public renderScale() {
@@ -73,18 +77,43 @@ class Renderer {
     ));
   }
 
-  public rotateHand(position: number) {
-    const arrowEl = this.elements.gaugeHandElements.pop(),
-      centralAngle = mathService.calcCentralAngle(
-        SCALE_START_ANGLE,
-        SCALE_END_ANGLE
-      ),
-      positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
-        centralAngle,
-        position
-      ),
-      slice = new Slice(this.currentAngle, positionAngle);
+  public handleRotating() {
 
+    sliderValue$
+      .pairwise()
+      .map(([prev, next]) => ({
+        hasAnimation: Math.abs(prev - next) > 1,
+        position: next,
+      }))
+      .map(({position, hasAnimation}) => {
+
+          const arrowEl = this.elements.gaugeHandElements.pop(),
+            centralAngle = mathService.calcCentralAngle(
+              SCALE_START_ANGLE,
+              SCALE_END_ANGLE
+            ),
+            positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
+              centralAngle,
+              position
+            ),
+            slice = new Slice(this.currentAngle, positionAngle);
+
+          return {
+            arrowEl,
+            hasAnimation,
+            slice
+          };
+        })
+        .subscribe({
+          next: ({arrowEl, slice, hasAnimation}) => {
+            hasAnimation ?
+              this.animateHand(arrowEl, slice) :
+              this.setHand(arrowEl, slice);
+            }
+        });
+  }
+
+  private animateHand(arrowEl, slice) {
     animateUtil.animateHand(
       (rotateAngle) => {
         arrowEl.setAttribute('transform',
@@ -94,6 +123,13 @@ class Renderer {
       slice,
       this.setCurrentAngle
     );
+  }
+
+  private setHand(arrowEl, slice) {
+    arrowEl.setAttribute('transform',
+      SVGService.describeRotation(slice.endAngle)
+    );
+    this.setCurrentAngle(slice.endAngle);
   }
 
   private renderTicks() {

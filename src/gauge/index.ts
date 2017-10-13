@@ -1,7 +1,9 @@
+import { Subject } from 'rxjs/Subject';
 import * as constants from '../constants';
 import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
 import DOMUtil from '../utils/dom-util';
+import { sliderValue$ } from '../utils/rx-util';
 import Renderer from './renderer';
 import style = require('./styles.css');
 import template from './template.html';
@@ -42,7 +44,7 @@ class Gauge extends HTMLElement {
     newValue: string
   ) {
     if (attr === 'value') {
-      this.renderer.rotateHand(Number(newValue));
+      sliderValue$.next(Number(newValue));
     }
   }
 

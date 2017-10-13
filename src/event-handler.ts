@@ -1,4 +1,5 @@
 import { throttle } from 'lodash';
+
 import {
   ANIMATION_DURATION
 } from './constants';
@@ -11,7 +12,7 @@ function handleReady() {
   document.addEventListener('sliderChange',
     throttle((e: CustomEvent) => {
       gaugeEl.setAttribute('value', e.detail.value);
-    }, 20)
+    })
   );
 }
 

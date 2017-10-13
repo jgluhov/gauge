@@ -18,7 +18,7 @@ class AnimateUtil {
   };
 
   private shakingAnimation: IAnimation = {
-    duration: 250,
+    duration: 350,
     fn: (function(slice: ISlice, time: number): TAngle {
       return slice.endAngle +
         slice.empty() * mathService.damping(time / this.duration);
@@ -26,9 +26,33 @@ class AnimateUtil {
   };
 
   public animateHand(describer, slice, complete) {
+    this.movementAnimation.duration = 750;
+
+    return this.movingHand([
+      this.movementAnimation,
+      this.shakingAnimation
+    ], describer, slice, complete);
+  }
+
+  public setHand(describer, slice, complete) {
+    this.movementAnimation.duration = 0;
+
+    return this.movingHand([
+      this.movementAnimation
+    ], describer, slice, complete);
+  }
+
+  get animations(): IAnimation[] {
+    return [
+      this.movementAnimation,
+      this.shakingAnimation
+    ];
+  }
+
+  private movingHand(animations, describer, slice, complete) {
     this.cancelAnimation();
 
-    this.animations.reduce((sequence: any, animation: IAnimation) =>
+    animations.reduce((sequence: any, animation: IAnimation) =>
       sequence.then(() =>
         new Promise((resolve) =>
           this.animate(
@@ -40,13 +64,6 @@ class AnimateUtil {
       ),
       Promise.resolve()
     ).then(() => complete(slice.endAngle));
-  }
-
-  get animations(): IAnimation[] {
-    return [
-      this.movementAnimation,
-      this.shakingAnimation
-    ];
   }
 
   private animate(handler, duration, complete) {
