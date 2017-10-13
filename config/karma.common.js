@@ -7,7 +7,7 @@ const karmaChromeLauncher = require('karma-chrome-launcher'),
   webpackConfig = require('./webpack.test');
 
 module.exports = {
-  basePath: '',
+  basePath: '../',
 
   frameworks: [
     'jasmine',

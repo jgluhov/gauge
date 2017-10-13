@@ -17,8 +17,7 @@ before_install:
   - "npm install -g npm@^2"
 before_script:
   - npm prune
-  - echo "module.exports = require('./config/karma.ci');" > karma.conf.js
 install:
   - npm install
 script:
-  - npm run test
+  - npm run ci
