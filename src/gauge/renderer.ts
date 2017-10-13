@@ -22,7 +22,7 @@ import DOMUtil from '../utils/dom-util';
 import Elements from './elements';
 
 class Renderer {
-  private previousAngle: number = SCALE_END_ANGLE;
+  private currentAngle: number = (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2;
   private elements: Elements;
 
   constructor(svgEl: SVGElement) {
@@ -83,18 +83,17 @@ class Renderer {
         centralAngle,
         position
       ),
-      slice = new Slice(this.previousAngle, positionAngle);
+      slice = new Slice(this.currentAngle, positionAngle);
 
     animateUtil.animateHand(
       (rotateAngle) => {
-        // console.log('rotateAngle', rotateAngle);
         arrowEl.setAttribute('transform',
           SVGService.describeRotation(rotateAngle)
         );
       },
       slice,
       ANIMATION_DURATION,
-      (angle) => this.previousAngle = angle
+      this.setCurrentAngle
     );
   }
 
@@ -158,6 +157,10 @@ class Renderer {
         textPathEl.setAttribute('href', '#gauge-text-path');
         textPathEl.textContent = text.content;
       });
+  }
+
+  private setCurrentAngle = (angle) => {
+    this.currentAngle = angle;
   }
 }
 
