@@ -92,7 +92,6 @@ class Renderer {
         );
       },
       slice,
-      ANIMATION_DURATION,
       this.setCurrentAngle
     );
   }

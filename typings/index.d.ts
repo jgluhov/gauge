@@ -36,12 +36,25 @@ interface IAxle {
   text: IText;
 }
 
+type TNumberFn = () => number;
+
 interface ISlice {
   startAngle: number;
   endAngle: number;
+  segment: TNumberFn;
+  direction: TNumberFn;
+  empty: TNumberFn;
 }
 
 interface IThrottleOptions {
   leading: boolean;
   trailing: boolean;
+}
+
+type TCurve = (slice: ISlice, time: number) =>  number;
+type TAngle = number;
+
+interface IAnimation {
+    fn: TCurve;
+    duration: number;
 }
