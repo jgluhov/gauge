@@ -5,6 +5,8 @@ const webpackMerge = require('webpack-merge'),
 module.exports = function(config) {
 
   const _config = webpackMerge(commonConfig, {
+    basePath: '.',
+    
     files: [
       'spec/main.ts',
       'spec/**/*.spec.ts',

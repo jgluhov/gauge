@@ -1,9 +1,13 @@
 import {
+  DAMPING_EQ_A,
+  DAMPING_EQ_B,
+  DAMPING_EQ_C,
   TICKS_INDENT,
   TICKS_LENGTH,
   TICKS_POSITION_INDENT,
   TICKS_TEXT_INDENT
 } from '../constants';
+
 import Point from '../structures/point';
 import Slice from '../structures/slice';
 import Text from '../structures/text';
@@ -170,6 +174,11 @@ class MathService {
 
   public radiansToHandPosition = (radians: number): number => {
     return this.radiansToDegree(-1 * (radians - (Math.PI / 2)));
+  }
+
+  public damping(time: number): number {
+    return DAMPING_EQ_A *
+      (Math.sin( DAMPING_EQ_B * time ) * Math.exp( -DAMPING_EQ_C * time ));
   }
 }
 

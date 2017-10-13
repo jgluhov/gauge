@@ -1,62 +1,42 @@
-import { flow } from 'lodash';
 import {
-  ANIMATION_DAMPING_PART,
   ANIMATION_DURATION,
-  ANIMATION_MOVEMENT_PART,
-  DAMPING_EQ_A,
-  DAMPING_EQ_B,
-  DAMPING_EQ_C
+  ANIMATION_RATIO
 } from '../constants';
 
+import mathService from '../services/math-service';
 import SVGService from '../services/svg-service';
 
 class AnimateUtil {
-  private requestAnimationFrameId: number = 0;
+  private animationId: number = 0;
 
-  public setHand(arrowEl, startAngle, endAngle, handleComplete, duration) {
-    const direction = startAngle > endAngle ? -1 : 1,
-      slice = Math.abs(startAngle - endAngle);
+  public animateHand(describer, slice, duration, complete) {
+    this.cancelAnimation();
 
-    this.stopAnimation();
+    const ratio = ANIMATION_RATIO.slice(),
+      calcRatio = mathService.calcRatio.bind(null, duration),
+      movementTime = calcRatio(ratio.shift()),
+      dumpingTime = calcRatio(ratio.pop());
 
-    this.animate((timeFraction) => {
-      const step = timeFraction / (duration * ANIMATION_MOVEMENT_PART);
-
-      arrowEl.setAttribute('transform',
-        SVGService.describeRotation((startAngle + direction * (step * slice)))
-      );
-
-    },
-    duration * ANIMATION_MOVEMENT_PART,
-    () => {
-      this.animate((timeFraction) => {
-        const step = timeFraction / (duration * ANIMATION_DAMPING_PART),
-          shouldDamp = slice ? 1 : 0;
-
-        arrowEl.setAttribute('transform',
-          SVGService.describeRotation(endAngle + shouldDamp * this.damping(step))
-        );
+    this.animate(
+      (timeFraction) => {
+        if (timeFraction <= movementTime) {
+          describer(slice.startAngle +
+            slice.direction() * ((timeFraction / movementTime) * slice.segment()));
+        } else {
+          describer(slice.endAngle +
+            slice.empty() * mathService.damping((timeFraction - movementTime) / dumpingTime));
+        }
       },
-      duration * ANIMATION_DAMPING_PART,
+      duration,
       () => {
-        arrowEl.setAttribute('transform',
-          SVGService.describeRotation(endAngle)
-        );
-        handleComplete(endAngle);
-      });
-    });
+        describer(slice.endAngle);
+        complete(slice.endAngle);
+      }
+    );
   }
 
-  private damping(time: number): number {
-    return DAMPING_EQ_A *
-      (Math.sin( DAMPING_EQ_B * time ) * Math.exp( -DAMPING_EQ_C * time ));
-  }
-
-  private animate(handler, duration, handleComplete) {
+  private animate(handler, duration, complete) {
     const start = performance.now();
-
-    handleComplete = handleComplete ?
-      handleComplete : () => {};
 
     const handleAnimate = (timestamp) => {
       let timePassed = timestamp - start;
@@ -68,17 +48,21 @@ class AnimateUtil {
       handler(Math.abs(timePassed));
 
       if (timePassed < duration) {
-        this.requestAnimationFrameId = requestAnimationFrame(handleAnimate);
+        this.requestAnimation(handleAnimate);
       } else {
-        handleComplete();
+        complete();
       }
     };
 
-    this.requestAnimationFrameId = requestAnimationFrame(handleAnimate);
+    this.requestAnimation(handleAnimate);
   }
 
-  private stopAnimation() {
-    cancelAnimationFrame(this.requestAnimationFrameId);
+  private requestAnimation(fn) {
+    this.animationId = requestAnimationFrame(fn);
+  }
+
+  private cancelAnimation() {
+    cancelAnimationFrame(this.animationId);
   }
 }
 

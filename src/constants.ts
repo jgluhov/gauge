@@ -18,9 +18,8 @@ export const TICKS_POSITION_INDENT = 3.5;
 
 export const HAND_RADIUS = 10;
 
-export const ANIMATION_DURATION = 1000;
-export const ANIMATION_MOVEMENT_PART = 2 / 3;
-export const ANIMATION_DAMPING_PART = 1 / 3;
+export const ANIMATION_DURATION = 1500;
+export const ANIMATION_RATIO = [70, 30];
 
 export const DAMPING_EQ_A = 1;
 export const DAMPING_EQ_B = 1;

@@ -82,14 +82,19 @@ class Renderer {
       positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
         centralAngle,
         position
-      );
+      ),
+      slice = new Slice(this.previousAngle, positionAngle);
 
-    animateUtil.setHand(
-      arrowEl,
-      this.previousAngle,
-      positionAngle,
-      (angle) => this.previousAngle = angle,
-      ANIMATION_DURATION
+    animateUtil.animateHand(
+      (rotateAngle) => {
+        // console.log('rotateAngle', rotateAngle);
+        arrowEl.setAttribute('transform',
+          SVGService.describeRotation(rotateAngle)
+        );
+      },
+      slice,
+      ANIMATION_DURATION,
+      (angle) => this.previousAngle = angle
     );
   }
 
