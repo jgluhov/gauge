@@ -1,6 +1,5 @@
 const helper = require('./helper'),
-  ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'),
-  HtmlWebpackPlugin = require('html-webpack-plugin');
+  ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: './src/main',
@@ -51,12 +50,5 @@ module.exports = {
 
   resolve: {
     extensions: ['.ts', '.js', '.css', '.html']
-  },
-
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Gauge.JS',
-      template: './src/index.html'
-    })
-  ]
+  }
 }

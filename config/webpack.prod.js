@@ -8,11 +8,13 @@ const webpack = require('webpack'),
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
 module.exports = webpackMerge(commonConfig, {
-  devtool: 'source-map',
+  entry: './src',
+
+  devtool: 'inline-source-map',
 
   output: {
     path: helper.root('dist'),
-    filename: 'bundle.[hash].js'
+    filename: 'gauge.min.js'
   },
 
   plugins: [
