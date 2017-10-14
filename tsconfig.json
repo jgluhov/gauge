@@ -1,18 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2016",
+    "module": "commonjs",
     "sourceMap": true,
     "lib": ["es2015", "dom"],
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "module": "commonjs",
     "removeComments": true,
     "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./typings"
-    ]
-  }
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "files": [
+    "./types/index.d.ts"
+  ]
 }

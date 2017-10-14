@@ -12,7 +12,7 @@ class Elements {
   public get gaugeScaleElements(): SVGElement[] {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
       this.gaugeScaleGroupEl.appendChild(
-        DOMUtil.createElement('path', SCALE_PATH_COUNT)
+        DOMUtil.createSVGElement('path', SCALE_PATH_COUNT)
       );
     }
 
@@ -22,7 +22,7 @@ class Elements {
   public get gaugeLinesElements(): SVGElement[] {
     if (!this.gaugeLinesGroupEl.hasChildNodes()) {
       this.gaugeLinesGroupEl.appendChild(
-        DOMUtil.createElement('line', TICKS_COUNT)
+        DOMUtil.createSVGElement('line', TICKS_COUNT)
       );
     }
 
@@ -32,11 +32,11 @@ class Elements {
   public get gaugeTextsElements(): SVGElement[] {
     if (!this.gaugeTextsGroupEl.hasChildNodes()) {
       this.gaugeTextsGroupEl.appendChild(
-        DOMUtil.createElement('text', TICKS_COUNT)
+        DOMUtil.createSVGElement('text', TICKS_COUNT)
       );
 
       Array.from(this.gaugeTextsGroupEl.children)
-        .forEach((el) => el.appendChild(DOMUtil.createElement('textPath')));
+        .forEach((el) => el.appendChild(DOMUtil.createSVGElement('textPath')));
     }
 
     return [].slice.call(this.gaugeTextsGroupEl.children);
@@ -44,8 +44,8 @@ class Elements {
 
   public get gaugeHandElements(): SVGElement[] {
     if (!this.gaugeHandGroupEl.hasChildNodes()) {
-      this.gaugeHandGroupEl.appendChild(DOMUtil.createElement('circle'));
-      this.gaugeHandGroupEl.appendChild(DOMUtil.createElement('path'));
+      this.gaugeHandGroupEl.appendChild(DOMUtil.createSVGElement('circle'));
+      this.gaugeHandGroupEl.appendChild(DOMUtil.createSVGElement('path'));
     }
 
     return [].slice.call(this.gaugeHandGroupEl.children);

@@ -10,10 +10,6 @@ declare module '*.css' {
     export = content;
 }
 
-interface IArrayLike {
-  length: number;
-}
-
 interface IPoint {
   x: number;
   y: number;
@@ -31,11 +27,6 @@ interface IText {
   degree: number;
 }
 
-interface IAxle {
-  tick: ITick;
-  text: IText;
-}
-
 type TNumberFn = () => number;
 
 interface ISlice {
@@ -44,11 +35,6 @@ interface ISlice {
   segment: TNumberFn;
   direction: TNumberFn;
   empty: TNumberFn;
-}
-
-interface IThrottleOptions {
-  leading: boolean;
-  trailing: boolean;
 }
 
 type TCurve = (slice: ISlice, time: number) =>  number;
