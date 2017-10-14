@@ -1,5 +1,6 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/pairwise';
+import 'rxjs/add/operator/throttleTime';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SCALE_END_ANGLE } from '../constants';
 

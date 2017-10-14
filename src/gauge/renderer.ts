@@ -26,6 +26,12 @@ class Renderer {
   private currentAngle: number = (
     SCALE_END_ANGLE - (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2
   );
+
+  private centralAngle = mathService.calcCentralAngle(
+    SCALE_START_ANGLE,
+    SCALE_END_ANGLE
+  );
+
   private elements: Elements;
 
   constructor(svgEl: SVGElement) {
@@ -78,58 +84,29 @@ class Renderer {
   }
 
   public handleRotating() {
-
     sliderValue$
-      .pairwise()
-      .map(([prev, next]) => ({
-        hasAnimation: Math.abs(prev - next) > 1,
-        position: next,
-      }))
-      .map(({position, hasAnimation}) => {
-
-          const arrowEl = this.elements.gaugeHandElements.pop(),
-            centralAngle = mathService.calcCentralAngle(
-              SCALE_START_ANGLE,
-              SCALE_END_ANGLE
-            ),
-            positionAngle = SCALE_END_ANGLE - mathService.calcRatio(
-              centralAngle,
+      .throttleTime(20)
+      .map((position) =>
+          new Slice(
+            this.currentAngle,
+            SCALE_END_ANGLE - mathService.calcRatio(
+              this.centralAngle,
               position
-            ),
-            slice = new Slice(this.currentAngle, positionAngle);
-
-          return {
-            arrowEl,
-            hasAnimation,
-            slice
-          };
-        })
-        .subscribe({
-          next: ({arrowEl, slice, hasAnimation}) => {
-            hasAnimation ?
-              this.animateHand(arrowEl, slice) :
-              this.setHand(arrowEl, slice);
-            }
-        });
+            ))
+        )
+        .subscribe(this.animateHand);
   }
 
-  private animateHand(arrowEl, slice) {
+  private animateHand = (slice) => {
     animateUtil.animateHand(
       (rotateAngle) => {
-        arrowEl.setAttribute('transform',
+        this.elements.arrowEl.setAttribute('transform',
           SVGService.describeRotation(rotateAngle)
         );
       },
       slice,
       this.setCurrentAngle
     );
-  }
-
-  private setHand(arrowEl, slice) {
-    arrowEl.setAttribute('transform',
-      SVGService.describeRotation(slice.endAngle)
-    );
-    this.setCurrentAngle(slice.endAngle);
   }
 
   private renderTicks() {

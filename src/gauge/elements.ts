@@ -51,6 +51,10 @@ class Elements {
     return [].slice.call(this.gaugeHandGroupEl.children);
   }
 
+  public get arrowEl(): SVGElement {
+    return this.gaugeHandElements.pop();
+  }
+
   public get gaugeScaleGroupEl() {
     return this.svgEl.querySelector('#gauge-scale-group');
   }

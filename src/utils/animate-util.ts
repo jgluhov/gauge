@@ -25,34 +25,15 @@ class AnimateUtil {
     })
   };
 
+  private animations: IAnimation[] = [
+    this.movementAnimation,
+    this.shakingAnimation
+  ];
+
   public animateHand(describer, slice, complete) {
-    this.movementAnimation.duration = 750;
-
-    return this.movingHand([
-      this.movementAnimation,
-      this.shakingAnimation
-    ], describer, slice, complete);
-  }
-
-  public setHand(describer, slice, complete) {
-    this.movementAnimation.duration = 0;
-
-    return this.movingHand([
-      this.movementAnimation
-    ], describer, slice, complete);
-  }
-
-  get animations(): IAnimation[] {
-    return [
-      this.movementAnimation,
-      this.shakingAnimation
-    ];
-  }
-
-  private movingHand(animations, describer, slice, complete) {
     this.cancelAnimation();
 
-    animations.reduce((sequence: any, animation: IAnimation) =>
+    this.animations.reduce((sequence: Promise<any>, animation: IAnimation) =>
       sequence.then(() =>
         new Promise((resolve) =>
           this.animate(
