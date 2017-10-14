@@ -1,2 +1,2 @@
 import Gauge from './gauge';
-window.customElements.define('app-gauge', Gauge);
+export default Gauge;
