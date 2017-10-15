@@ -11,6 +11,6 @@ export default class Slice implements ISlice {
   ) {}
 
   public centralAngle() {
-    return this.endAngle - this.startAngle;
+    return Math.abs(this.endAngle - this.startAngle);
   }
 }

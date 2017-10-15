@@ -6,7 +6,7 @@ interface IAnimation {
 }
 
 import HandState from '../structures/hand-state';
-import mathService from './math.service';
+import MathService from './math.service';
 
 class AnimationService {
   private animationId: number = 0;
@@ -23,7 +23,7 @@ class AnimationService {
     duration: 350,
     fn: (function(slice: ISlice, time: number): number {
       return slice.endAngle +
-        HandState.freeze(slice) * mathService.damping(time / this.duration);
+        HandState.freeze(slice) * MathService.damping(time / this.duration);
     })
   };
 

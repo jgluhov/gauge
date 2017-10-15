@@ -51,9 +51,9 @@ class Gauge extends HTMLElement {
   static get style() {
     return `
       :host {
-        display: block;
-        height: 320px;
-        width: 480px;
+        display: inline-block;
+        height: 100%;
+        width: 100%;
       }
       :host #gauge {
         transform-origin: 50% 50%;
