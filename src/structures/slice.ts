@@ -1,9 +1,7 @@
 export interface ISlice {
   startAngle: number;
   endAngle: number;
-  segment: () => number;
-  direction: () => number;
-  empty: () => number;
+  centralAngle: () => number;
 }
 
 export default class Slice implements ISlice {
@@ -12,15 +10,7 @@ export default class Slice implements ISlice {
     public endAngle: number = 0
   ) {}
 
-  public segment() {
-    return Math.abs(this.startAngle - this.endAngle);
-  }
-
-  public direction() {
-    return this.startAngle > this.endAngle ? -1 : 1;
-  }
-
-  public empty() {
-    return +!(this.startAngle - this.endAngle === 0);
+  public centralAngle() {
+    return this.endAngle - this.startAngle;
   }
 }

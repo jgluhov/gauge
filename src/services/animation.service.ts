@@ -1,13 +1,11 @@
 import { ISlice } from '../structures/slice';
 
-type TCurve = (slice: ISlice, time: number) =>  number;
-type TAngle = number;
-
 interface IAnimation {
-  fn: TCurve;
+  fn: (slice: ISlice, time: number) =>  number;
   duration: number;
 }
 
+import HandState from '../structures/hand-state';
 import mathService from './math.service';
 
 class AnimationService {
@@ -15,17 +13,17 @@ class AnimationService {
 
   private movementAnimation: IAnimation = {
     duration: 750,
-    fn: (function(slice: ISlice, time: number): TAngle {
+    fn: (function(slice: ISlice, time: number): number {
       return slice.startAngle +
-        slice.direction() * (time / this.duration) * slice.segment();
+        HandState.direction(slice) * (time / this.duration) * slice.centralAngle();
     }),
   };
 
   private shakingAnimation: IAnimation = {
     duration: 350,
-    fn: (function(slice: ISlice, time: number): TAngle {
+    fn: (function(slice: ISlice, time: number): number {
       return slice.endAngle +
-        slice.empty() * mathService.damping(time / this.duration);
+        HandState.freeze(slice) * mathService.damping(time / this.duration);
     })
   };
 
