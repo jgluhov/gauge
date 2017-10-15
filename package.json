@@ -4,7 +4,8 @@
   "description": "gauge",
   "main": "./dist/gauge.min.js",
   "scripts": {
-    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail",
+    "build": "rimraf dist && webpack --config config/webpack.build.js --progress --profile --bail",
+    "pages": "rimraf pages && webpack --config config/webpack.pages.js --progress --profile --bail",
     "start": "webpack-dev-server --inline --progress",
     "test": "karma start",
     "ci": "karma start config/karma.ci.js",

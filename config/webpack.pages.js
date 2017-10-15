@@ -1,29 +1,26 @@
-const helper = require('./helper'),
+const webpack = require('webpack'),
+  helper = require('./helper'),
   commonConfig = require('./webpack.common'),
   ExtractTextWebpackPlugin = require('extract-text-webpack-plugin'),
+  BabelMinifyWebpackPlugin = require('babel-minify-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   webpackMerge = require('webpack-merge');
 
 module.exports = webpackMerge(commonConfig, {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
 
   output: {
-    path: helper.root('dist'),
+    path: helper.root('pages'),
     filename: 'assets/bundle.js'
   },
 
   plugins: [
+    new webpack.NoEmitOnErrorsPlugin(),
+    new BabelMinifyWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Gauge.JS',
       template: './src/index.html'
     }),
-    new ExtractTextWebpackPlugin('assets/bundle.css')
-  ],
-
-  devServer: {
-    contentBase: helper.root('dist'),
-    port: 3000,
-    historyApiFallback: true,
-    stats: 'minimal'
-  },
+    new ExtractTextWebpackPlugin('assets/bundle.[hash].css')
+  ]
 });

@@ -1,12 +1,16 @@
-import {
-  ANIMATION_DURATION,
-  ANIMATION_RATIO
-} from '../constants';
+import { ISlice } from '../structures/slice';
 
-import mathService from '../services/math-service';
-import SVGService from '../services/svg-service';
+type TCurve = (slice: ISlice, time: number) =>  number;
+type TAngle = number;
 
-class AnimateUtil {
+interface IAnimation {
+  fn: TCurve;
+  duration: number;
+}
+
+import mathService from './math.service';
+
+class AnimationService {
   private animationId: number = 0;
 
   private movementAnimation: IAnimation = {
@@ -74,4 +78,4 @@ class AnimateUtil {
   }
 }
 
-export default new AnimateUtil();
+export default AnimationService;

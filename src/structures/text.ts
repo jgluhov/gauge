@@ -1,3 +1,12 @@
+import { IPoint } from './point';
+
+interface IText {
+  position: number;
+  content: string;
+  point: IPoint;
+  degree: number;
+}
+
 export default class Text implements IText {
   constructor(
     public position: number,

@@ -1,55 +1,55 @@
 import {
-  ANIMATION_DURATION,
   HAND_RADIUS,
   SCALE_CENTER_X,
   SCALE_CENTER_Y,
   SCALE_END_ANGLE,
-  SCALE_PATH_COUNT,
   SCALE_RADIUS,
   SCALE_RATIO,
   SCALE_START_ANGLE,
   TICKS_COUNT,
   TICKS_INDENT,
   TICKS_LENGTH
-} from '../constants';
+} from '../../constants';
 
-import mathService from '../services/math-service';
-import SVGService from '../services/svg-service';
-import Point from '../structures/point';
-import Slice from '../structures/slice';
-import animateUtil from '../utils/animate-util';
-import DOMUtil from '../utils/dom-util';
-import { sliderValue$ } from '../utils/rx-util';
-import Elements from './elements';
+import AnimationService from '../../services/animation.service';
+import MathService from '../../services/math.service';
+import SVGService from '../../services/svg.service';
+import Slice from '../../structures/slice';
+import GaugeQueryService from './gauge-query.service';
 
-class Renderer {
+class GaugeRenderService {
   private currentAngle: number = (
     SCALE_END_ANGLE - (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2
   );
 
-  private centralAngle = mathService.calcCentralAngle(
+  private centralAngle = MathService.calcCentralAngle(
     SCALE_START_ANGLE,
     SCALE_END_ANGLE
   );
 
-  private elements: Elements;
+  private queryService: GaugeQueryService;
+  private mathService: MathService;
+  private svgService: SVGService;
+  private animationService: AnimationService;
 
   constructor(svgEl: SVGElement) {
-    this.elements = new Elements(svgEl);
-    this.handleRotating();
+    this.queryService = new GaugeQueryService(svgEl);
+    this.mathService = new MathService();
+    this.svgService = new SVGService();
+    this.animationService = new AnimationService();
   }
 
   public renderScale() {
-    const slices = mathService.generateSlices(
+    const slices = this.mathService.generateSlices(
       SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
     );
 
-    Array.from(this.elements.gaugeScaleElements)
-      .forEach((el, indx) => {
+    Array.from(this.queryService.gaugeScaleElements)
+      .forEach((el) => {
         const slice = slices.next().value;
 
         el.setAttribute(
-          'd', SVGService.describeArc(
+          'd', this.svgService.describeArc(
             SCALE_CENTER_X,
             SCALE_CENTER_Y,
             SCALE_RADIUS,
@@ -66,14 +66,14 @@ class Renderer {
   }
 
   public renderHand() {
-    const circleEl = this.elements.gaugeHandElements.shift(),
-      arrowEl = this.elements.gaugeHandElements.pop();
+    const circleEl = this.queryService.gaugeHandElements.shift(),
+      arrowEl = this.queryService.gaugeHandElements.pop();
 
     circleEl.setAttribute('cx', SCALE_CENTER_X.toString());
     circleEl.setAttribute('cy', SCALE_CENTER_Y.toString());
     circleEl.setAttribute('r', HAND_RADIUS.toString());
 
-    arrowEl.setAttribute('d', SVGService.describeHand(
+    arrowEl.setAttribute('d', this.svgService.describeHand(
       SCALE_CENTER_X,
       SCALE_CENTER_Y,
       SCALE_RADIUS,
@@ -83,24 +83,21 @@ class Renderer {
     ));
   }
 
-  public handleRotating() {
-    sliderValue$
-      .throttleTime(20)
-      .map((position) =>
-          new Slice(
-            this.currentAngle,
-            SCALE_END_ANGLE - mathService.calcRatio(
-              this.centralAngle,
-              position
-            ))
-        )
-        .subscribe(this.animateHand);
+  public rotateHand(value) {
+    const slice = new Slice(
+      this.currentAngle,
+      SCALE_END_ANGLE - MathService.calcRatio(
+        this.centralAngle,
+        value
+      ));
+
+    this.animateHand(slice);
   }
 
-  private animateHand = (slice) => {
-    animateUtil.animateHand(
+  private animateHand(slice) {
+    this.animationService.animateHand(
       (rotateAngle) => {
-        this.elements.arrowEl.setAttribute('transform',
+        this.queryService.arrowEl.setAttribute('transform',
           SVGService.describeRotation(rotateAngle)
         );
       },
@@ -110,7 +107,7 @@ class Renderer {
   }
 
   private renderTicks() {
-    const ticks = mathService.generateTicks(
+    const ticks = this.mathService.generateTicks(
       SCALE_CENTER_X,
       SCALE_CENTER_Y,
       SCALE_START_ANGLE,
@@ -119,8 +116,8 @@ class Renderer {
       TICKS_COUNT
     );
 
-    Array.from(this.elements.gaugeLinesElements)
-      .forEach((el, i) => {
+    Array.from(this.queryService.gaugeLinesElements)
+      .forEach((el) => {
         const attr = el.setAttribute.bind(el),
           tick = ticks.next().value;
 
@@ -133,8 +130,8 @@ class Renderer {
   }
 
   private renderTexts() {
-    this.elements.gaugeTextPathEl.setAttribute(
-      'd', SVGService.describeArc(
+    this.queryService.gaugeTextPathEl.setAttribute(
+      'd', this.svgService.describeArc(
         SCALE_CENTER_X,
         SCALE_CENTER_Y,
         SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
@@ -143,18 +140,18 @@ class Renderer {
       )
     );
 
-    const texts = mathService.generateTexts(
+    const texts = this.mathService.generateTexts(
       SCALE_CENTER_X,
       SCALE_CENTER_Y,
       SCALE_RADIUS,
       SCALE_START_ANGLE,
       SCALE_END_ANGLE,
       TICKS_COUNT,
-      this.elements.gaugeScaleLength
+      this.queryService.gaugeTextPathEl.getTotalLength()
     );
 
-    Array.from(this.elements.gaugeTextsElements)
-      .forEach((el, i: number) => {
+    Array.from(this.queryService.gaugeTextsElements)
+      .forEach((el) => {
         const textPathEl = el.firstElementChild,
           text = texts.next().value;
 
@@ -166,7 +163,7 @@ class Renderer {
           rotate(${text.degree} ${text.point.x} ${text.point.y})
         `);
 
-        textPathEl.setAttribute('href', '#gauge-text-path');
+        textPathEl.setAttribute('href', '#components-text-path');
         textPathEl.textContent = text.content;
       });
   }
@@ -176,4 +173,4 @@ class Renderer {
   }
 }
 
-export default Renderer;
+export default GaugeRenderService;

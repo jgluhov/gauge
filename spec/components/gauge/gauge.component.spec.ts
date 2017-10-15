@@ -1,6 +1,8 @@
-import Gauge from '../../src/gauge';
+import Gauge from '../../../src/components/gauge/gauge.component';
 
-describe('Gauge', () => {
+declare const fixture;
+
+describe('Gauge Web Component', () => {
   beforeEach(() => {
     fixture.load('gauge.fixture.html');
     this.gaugeEl = fixture.el.firstChild;
@@ -18,21 +20,7 @@ describe('Gauge', () => {
     });
   });
 
-  xdescribe('getter gaugeScaleEl', () => {
-    describe('when read gaugeScaleEl property', () => {
-      it('should return element', () => {
-        expect(this.gaugeEl.gaugeScaleEl)
-          .toEqual(jasmine.any(Element));
-      });
-
-      it('should return element with correct id', () => {
-        expect(this.gaugeEl.gaugeScaleEl.id)
-          .toBe('gauge-scale');
-      });
-    });
-  });
-
-  describe('Shadow DOM', () => {
+  describe('Gauge shadow DOM', () => {
     describe('when Gauges constructor is called', () => {
       it('should create shadow dom', () => {
         expect(this.gaugeEl.shadowRoot).not.toBeNull();

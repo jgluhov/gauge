@@ -14,6 +14,42 @@ import Text from '../structures/text';
 import Tick from '../structures/tick';
 
 class MathService {
+  public static multiplier(x: number): number {
+    const parts = x.toString().split('.');
+
+    if (parts.length < 2) {
+      return 1;
+    }
+
+    return Math.pow(10, parts[1].length);
+  }
+
+  public static calcRatio(centralAngle: number = 0, ratio: number = 0): number {
+    return centralAngle * ratio / 100;
+  }
+
+  public static calcStep(total: number = 0, count: number = 0): number {
+    return total / (count - 1);
+  }
+
+  public static calcCentralAngle(startAngle: number, endAngle: number): number {
+    return startAngle < endAngle ?
+      (endAngle - startAngle) : (startAngle - endAngle);
+  }
+
+  public static radiansToDegree(radians: number): number {
+    return (radians / Math.PI) * 180;
+  }
+
+  public static damping(time: number): number {
+    return DAMPING_EQ_A *
+      (Math.sin( DAMPING_EQ_B * time ) * Math.exp( -DAMPING_EQ_C * time ));
+  }
+
+  public static radiansToHandPosition(radians: number): number {
+    return MathService.radiansToDegree(-1 * (radians - (Math.PI / 2)));
+  }
+
   public multiply(...numbers): number {
     const formattedNumbers = numbers.map(this.formatNumber),
       factor = this.correctionFactor(formattedNumbers);
@@ -24,33 +60,23 @@ class MathService {
       }, 1);
   }
 
-  public correctionFactor = (...numbers): number => {
+  public correctionFactor(...numbers): number {
     return numbers.reduce((prev: number, next: number) => {
-      const mp = this.multiplier(prev),
-          mn = this.multiplier(next);
+      const mp = MathService.multiplier(prev),
+          mn = MathService.multiplier(next);
 
       return Math.max(mp, mn);
     }, 1);
-  }
-
-  public multiplier = (x: number): number => {
-    const parts = x.toString().split('.');
-
-    if (parts.length < 2) {
-      return 1;
-    }
-
-    return Math.pow(10, parts[1].length);
   }
 
   public isEpsilon = (n: number = 0): boolean => Math.abs(n) < 1e-10;
 
   public formatNumber = (n: number = 0): number => this.isEpsilon(n) ? 0 : n;
 
-  public generateSlices = (startAngle, endAngle, scaleRatio) => {
+  public generateSlices(startAngle, endAngle, scaleRatio): Iterator<Slice> {
 
-    const centralAngle = this.calcCentralAngle(startAngle, endAngle),
-      calcRatio = this.calcRatio.bind(this, centralAngle);
+    const centralAngle = MathService.calcCentralAngle(startAngle, endAngle),
+      calcRatio = MathService.calcRatio.bind(this, centralAngle);
 
     function* slices() {
       let i = 0,
@@ -71,17 +97,17 @@ class MathService {
     return slices();
   }
 
-  public generateTicks = (
+  public generateTicks(
       centerX: number,
       centerY: number,
       startAngle: number,
       endAngle: number,
       radius: number,
       ticksCount: number
-  ) => {
+  ): Iterator<Tick> {
     const toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
-      centralAngle = this.calcCentralAngle(startAngle, endAngle),
-      stepAngle = this.calcStep(centralAngle, ticksCount);
+      centralAngle = MathService.calcCentralAngle(startAngle, endAngle),
+      stepAngle = MathService.calcStep(centralAngle, ticksCount);
 
     function* ticks() {
       let i = 0,
@@ -101,7 +127,7 @@ class MathService {
     return ticks();
   }
 
-  public generateTexts = (
+  public generateTexts(
     centerX: number,
     centerY: number,
     radius: number,
@@ -109,12 +135,12 @@ class MathService {
     endAngle: number,
     ticksCount: number,
     totalLength: number
-  ) => {
-    const centralAngle = this.calcCentralAngle(startAngle, endAngle),
-      stepAngle = this.calcStep(centralAngle, ticksCount),
-      stepPosition = this.calcStep(totalLength, ticksCount),
+  ) {
+    const centralAngle = MathService.calcCentralAngle(startAngle, endAngle),
+      stepAngle = MathService.calcStep(centralAngle, ticksCount),
+      stepPosition = MathService.calcStep(totalLength, ticksCount),
       toCartesian = this.polarToCartesian.bind(this, centerX, centerY),
-      toDegree = this.radiansToDegree.bind(this),
+      toDegree = MathService.radiansToDegree.bind(this),
       textsRadius = radius + (2 * TICKS_INDENT) + TICKS_LENGTH;
 
     function* texts() {
@@ -142,44 +168,18 @@ class MathService {
     return texts();
   }
 
-  public calcRatio = (centralAngle: number = 0, ratio: number = 0): number => {
-    return centralAngle * ratio / 100;
-  }
-
-  public calcStep = (total: number = 0, count: number = 0): number => {
-    return total / (count - 1);
-  }
-
-  public calcCentralAngle = (startAngle: number, endAngle: number): number => {
-    return startAngle < endAngle ?
-      (endAngle - startAngle) : (startAngle - endAngle);
-  }
-
-  public radiansToDegree = (radians: number): number => {
-    return (radians / Math.PI) * 180;
-  }
-
-  public polarToCartesian = (
+  public polarToCartesian(
     centerX: number = 0,
     centerY: number = 0,
     radius: number = 0,
     angle: number = 0
-  ): Point => {
+  ): Point {
 
     return new Point(
       centerX + this.multiply(radius * Math.cos(angle)),
       centerY + this.multiply(radius * Math.sin(angle))
     );
   }
-
-  public radiansToHandPosition = (radians: number): number => {
-    return this.radiansToDegree(-1 * (radians - (Math.PI / 2)));
-  }
-
-  public damping(time: number): number {
-    return DAMPING_EQ_A *
-      (Math.sin( DAMPING_EQ_B * time ) * Math.exp( -DAMPING_EQ_C * time ));
-  }
 }
 
-export default new MathService();
+export default MathService;

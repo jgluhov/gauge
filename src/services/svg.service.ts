@@ -1,23 +1,39 @@
 import {
   DRAW_ACCURACY,
   SCALE_CENTER_X,
-  SCALE_CENTER_Y,
-  SCALE_END_ANGLE
+  SCALE_CENTER_Y
 } from '../constants';
 
 import Point from '../structures/point';
-import mathService from './math-service';
+import MathService from './math.service';
 
 class SVGService {
-  public describeArc = (
+  public static describeRotation(rotateAngle: number): string {
+    return `
+      translate(${2 * SCALE_CENTER_X},0)
+      scale(-1, 1)
+      rotate(
+        ${MathService.radiansToHandPosition(rotateAngle)}
+        ${SCALE_CENTER_X} ${SCALE_CENTER_Y}
+      )
+    `;
+  }
+
+  private mathService: MathService;
+
+  constructor() {
+    this.mathService = new MathService();
+  }
+
+  public describeArc(
     centerX: number = 0,
     centerY: number = 0,
     radius: number = 0,
     startAngle: number = 0,
     endAngle: number = 0
-  ): string => {
-    const centralAngle = mathService.calcCentralAngle(startAngle, endAngle),
-      toCartesian = mathService.polarToCartesian.bind(mathService, centerX, centerY),
+  ): string {
+    const centralAngle = MathService.calcCentralAngle(startAngle, endAngle),
+      toCartesian = this.mathService.polarToCartesian.bind(this.mathService, centerX, centerY),
       pointsCount = Math.ceil(centralAngle / DRAW_ACCURACY);
 
     let angle = startAngle;
@@ -36,15 +52,15 @@ class SVGService {
       .join(' ');
   }
 
-  public describeHand = (
+  public describeHand(
     centerX: number,
     centerY: number,
     scaleRadius: number,
     handRadius: number,
     ticksIndent: number,
     ticksLength: number
-  ): string => {
-    const point = mathService.polarToCartesian(
+  ): string {
+    const point = this.mathService.polarToCartesian(
       centerX, centerY, scaleRadius + ticksIndent + ticksLength, Math.PI / 2
     );
 
@@ -55,17 +71,6 @@ class SVGService {
       Z
     `;
   }
-
-  public describeRotation = (rotateAngle: number): string => {
-    return `
-      translate(${2 * SCALE_CENTER_X},0)
-      scale(-1, 1)
-      rotate(
-        ${mathService.radiansToHandPosition(rotateAngle)}
-        ${SCALE_CENTER_X} ${SCALE_CENTER_Y}
-      )
-    `;
-  }
 }
 
-export default new SVGService();
+export default SVGService;

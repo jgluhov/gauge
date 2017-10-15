@@ -1,22 +1,23 @@
-class DOMUtil {
+class DOMService {
   public static SVG_ELEMENT_NS = 'http://www.w3.org/2000/svg';
   /**
    * createShadowRoot - creates document fragment which
    * contains certain template ane style elements.
    * @static
-   * @param {string} template HTML template
    * @param {string} style CSS styles
+   * @param {string} template HTML template
    * @returns {DocumentFragment} document fragment contained shadow dom
    */
   public static createShadowRoot(
-    template: string, style: string
+    style: string,
+    template: string,
   ): DocumentFragment {
     const templateEl = document.createElement('template'),
       styleEl = document.createElement('style'),
       content = document.createDocumentFragment();
 
-    templateEl.innerHTML = template;
     styleEl.innerHTML = style;
+    templateEl.innerHTML = template;
 
     content.appendChild(styleEl);
     content.appendChild(templateEl.content);
@@ -37,7 +38,7 @@ class DOMUtil {
   ): DocumentFragment {
     return new Array<number>(amount)
       .fill(0)
-      .map(() => document.createElementNS(DOMUtil.SVG_ELEMENT_NS, tagName))
+      .map(() => document.createElementNS(DOMService.SVG_ELEMENT_NS, tagName))
       .reduce((fragment: DocumentFragment, element) => {
         fragment.appendChild(element);
         return fragment;
@@ -45,4 +46,4 @@ class DOMUtil {
   }
 }
 
-export default DOMUtil;
+export default DOMService;

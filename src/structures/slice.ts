@@ -1,3 +1,11 @@
+export interface ISlice {
+  startAngle: number;
+  endAngle: number;
+  segment: () => number;
+  direction: () => number;
+  empty: () => number;
+}
+
 export default class Slice implements ISlice {
   constructor(
     public startAngle: number = 0,
