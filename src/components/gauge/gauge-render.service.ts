@@ -163,7 +163,7 @@ class GaugeRenderService {
           rotate(${text.degree} ${text.point.x} ${text.point.y})
         `);
 
-        textPathEl.setAttribute('href', '#components-text-path');
+        textPathEl.setAttribute('href', '#gauge-text-path');
         textPathEl.textContent = text.content;
       });
   }

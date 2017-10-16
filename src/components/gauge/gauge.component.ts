@@ -92,22 +92,22 @@ class Gauge extends HTMLElement {
   static get template() {
     return `
       <svg version="1.1"
-       xmlns="http://www.w3.org/2000/svg"
-       viewBox="0 0 480 320"
-       id="gauge"
-       width="100%"
-       height="100%"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 480 320"
+        id="gauge"
+        width="100%"
+        height="100%"
       >
         <title>Gauge</title>
         <defs>
           <path id="gauge-text-path" d=""></path>
         </defs>
         <g id="gauge-scale-group"></g>
-           <g id="gauge-axis-group">
-           <g id="gauge-lines-group"></g>
-           <g id="gauge-texts-group"></g>
-         </g>
-         <g id="gauge-hand-group"></g>
+            <g id="gauge-axis-group"></g>
+            <g id="gauge-lines-group"></g>
+            <g id="gauge-texts-group"></g>
+        </g>
+        <g id="gauge-hand-group"></g>
       </svg>
     `;
   }
