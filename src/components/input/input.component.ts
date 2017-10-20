@@ -1,22 +1,16 @@
 import DOMService from '../../services/dom.service';
-import { attachStore } from '../../store';
+import { attachStore, IStore } from '../../store';
+import {
+  gaugeValueChangeAction,
+  IStatefulComponent
+} from '../../store';
 
 export default class Input extends HTMLElement {
-  private static handleSliderChange(e) {
-    document.dispatchEvent(
-      new CustomEvent('inputChange', {
-        detail: {
-          value: (e.target as HTMLInputElement).value,
-        }
-      })
-    );
-  }
-
   private root: DocumentFragment;
   private sliderEl: HTMLInputElement;
 
   @attachStore()
-  private store;
+  private store: IStore;
 
   constructor() {
     super();
@@ -32,10 +26,16 @@ export default class Input extends HTMLElement {
 
     this.sliderEl = this.root.querySelector('input');
     this.sliderEl.addEventListener(
-      'change', Input.handleSliderChange
+      'change', this.handleSliderChange
     );
 
     shadow.appendChild(this.root);
+  }
+
+  private handleSliderChange = (e) => {
+    this.store.dispatch(
+      gaugeValueChangeAction((e.target as HTMLInputElement).value)
+    );
   }
 
   static get style() {
