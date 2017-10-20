@@ -1,4 +1,5 @@
 import DOMService from '../../services/dom.service';
+import { attachStore } from '../../store';
 
 export default class Input extends HTMLElement {
   private static handleSliderChange(e) {
@@ -13,6 +14,9 @@ export default class Input extends HTMLElement {
 
   private root: DocumentFragment;
   private sliderEl: HTMLInputElement;
+
+  @attachStore()
+  private store;
 
   constructor() {
     super();

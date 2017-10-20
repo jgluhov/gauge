@@ -1,4 +1,5 @@
 import DOMService from '../../services/dom.service';
+import { attachStore } from '../../store';
 import GaugeRenderService from './gauge-render.service';
 
 class Gauge extends HTMLElement {
@@ -11,6 +12,9 @@ class Gauge extends HTMLElement {
       'value'
     ];
   }
+
+  @attachStore()
+  private store;
 
   constructor() {
     super();
