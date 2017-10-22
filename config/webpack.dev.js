@@ -9,7 +9,7 @@ module.exports = webpackMerge(commonConfig, {
 
   output: {
     path: helper.root('dist'),
-    filename: 'assets/bundle.js'
+    filename: 'assets/js/bundle.js'
   },
 
   plugins: [
@@ -17,7 +17,7 @@ module.exports = webpackMerge(commonConfig, {
       title: 'Gauge.JS',
       template: './src/index.html'
     }),
-    new ExtractTextWebpackPlugin('assets/bundle.css')
+    new ExtractTextWebpackPlugin('assets/css/bundle.css')
   ],
 
   devServer: {

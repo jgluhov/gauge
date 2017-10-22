@@ -30,6 +30,14 @@ module.exports = {
       {
         test: /\.html$/,
         loader: 'html-loader?exportAsEs6Default'
+      },
+      {
+        test: /\.(png)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          useRelativePath: true
+        }
       }
     ],
 
@@ -37,6 +45,6 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.js', '.css', '.html']
+    extensions: ['.ts', '.js', '.css', '.html', '.png']
   }
-}
+};

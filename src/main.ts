@@ -1,3 +1,4 @@
+import './assets/img/favicon';
 import Gauge from './components/gauge/gauge.component';
 import Input from './components/input/input.component';
 import './store-handler';
