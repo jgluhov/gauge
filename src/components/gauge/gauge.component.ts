@@ -1,4 +1,16 @@
-import DOMService from '../../services/dom.service';
+import {
+  HAND_RADIUS,
+  SCALE_CENTER_X,
+  SCALE_CENTER_Y, SCALE_DEFAULT_VALUE,
+  SCALE_END_ANGLE,
+  SCALE_RADIUS,
+  SCALE_RATIO,
+  SCALE_START_ANGLE,
+  TICKS_COUNT,
+  TICKS_INDENT,
+  TICKS_LENGTH
+} from '../../constants';
+import DOMService, {IParams} from '../../services/dom.service';
 import { attachStore } from '../../store';
 import GaugeRenderService from './gauge-render.service';
 
@@ -31,9 +43,11 @@ class Gauge extends HTMLElement {
     this.svgEl = this.root.querySelector('svg');
     this.renderService = new GaugeRenderService(this.svgEl);
 
-    this.render();
-
     shadow.appendChild(this.root);
+  }
+
+  private connectedCallback() {
+    this.render(DOMService.toParams(this.attributes, Gauge.defaultParams));
   }
 
   private attributeChangedCallback(
@@ -46,9 +60,11 @@ class Gauge extends HTMLElement {
     }
   }
 
-  private render() {
-    this.renderService.renderScale();
+  private render(params: IParams) {
+    this.renderService.renderScale(params);
+
     this.renderService.renderAxis();
+
     this.renderService.renderHand();
   }
 
@@ -114,6 +130,14 @@ class Gauge extends HTMLElement {
         <g id="gauge-hand-group"></g>
       </svg>
     `;
+  }
+
+  static get defaultParams() {
+    return {
+      endAngle: SCALE_END_ANGLE,
+      startAngle: SCALE_START_ANGLE,
+      value: SCALE_DEFAULT_VALUE,
+    };
   }
 }
 

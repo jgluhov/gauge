@@ -17,10 +17,6 @@ export interface IStore {
   subscribe: (listener: IListener) => IUnsubscribe;
 }
 
-export interface IStatefulComponent {
-  store: IStore;
-}
-
 export const attachStore = () => {
   return (target: HTMLElement, key: string) => {
     Object.defineProperty(target, key, {

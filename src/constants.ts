@@ -6,6 +6,7 @@ export const SCALE_START_ANGLE = - Math.PI / 6;
 export const SCALE_END_ANGLE = 7 * Math.PI / 6;
 export const SCALE_RATIO = [ 8, 26, 100 ];
 export const SCALE_PATH_COUNT = 3;
+export const SCALE_DEFAULT_VALUE = 0;
 export const SCALE_CENTER_X = SVG_WIDTH / 2;
 export const SCALE_CENTER_Y = SVG_HEIGHT / 2 - 45;
 export const SCALE_RADIUS = 170;

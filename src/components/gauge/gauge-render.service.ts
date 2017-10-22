@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 
 import AnimationService from '../../services/animation.service';
+import DOMService, { IParams } from '../../services/dom.service';
 import MathService from '../../services/math.service';
 import SVGService from '../../services/svg.service';
 import Slice from '../../structures/slice';
@@ -39,9 +40,9 @@ class GaugeRenderService {
     this.animationService = new AnimationService();
   }
 
-  public renderScale() {
+  public renderScale(params: IParams) {
     const slices = this.mathService.generateSlices(
-      SCALE_START_ANGLE, SCALE_END_ANGLE, SCALE_RATIO
+      params.startAngle, params.endAngle, SCALE_RATIO
     );
 
     Array.from(this.queryService.gaugeScaleElements)

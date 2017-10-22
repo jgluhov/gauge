@@ -1,6 +1,7 @@
 import Gauge from '../../../src/components/gauge/gauge.component';
+import { IFixture } from '../../fixtures';
 
-declare const fixture;
+declare const fixture: IFixture;
 
 describe('Gauge Web Component', () => {
   beforeEach(() => {

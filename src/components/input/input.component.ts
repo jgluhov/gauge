@@ -1,8 +1,8 @@
 import DOMService from '../../services/dom.service';
-import { attachStore, IStore } from '../../store';
 import {
+  attachStore,
   gaugeValueChangeAction,
-  IStatefulComponent
+  IStore
 } from '../../store';
 
 export default class Input extends HTMLElement {
@@ -26,16 +26,16 @@ export default class Input extends HTMLElement {
 
     this.sliderEl = this.root.querySelector('input');
     this.sliderEl.addEventListener(
-      'change', this.handleSliderChange
+      'change', this.handleInputChange
     );
 
     shadow.appendChild(this.root);
   }
 
-  private handleSliderChange = (e) => {
-    this.store.dispatch(
-      gaugeValueChangeAction((e.target as HTMLInputElement).value)
-    );
+  private handleInputChange = (e) => {
+    const inputValue = (e.target as HTMLInputElement).value;
+
+    this.store.dispatch(gaugeValueChangeAction(inputValue));
   }
 
   static get style() {

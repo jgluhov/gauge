@@ -1,4 +1,10 @@
-class DOMService {
+import { defaults, defaultTo } from 'lodash';
+
+export interface IParams {
+  [key: string]: string | number | number[];
+}
+
+export default class DOMService {
   public static SVG_ELEMENT_NS = 'http://www.w3.org/2000/svg';
   /**
    * createShadowRoot - creates document fragment which
@@ -29,7 +35,7 @@ class DOMService {
    * static method createSVGElement - creates specific svg element(s)
    * with correct namespace.
    * @static
-   * @param {string} tagName HTML tag name for element
+   * @param {string} tagName for HTML element
    * @param {number} amount of tags to create
    * @return {DocumentFragment} document fragment contained svg element(s)
    */
@@ -44,6 +50,37 @@ class DOMService {
         return fragment;
       }, document.createDocumentFragment());
   }
-}
 
-export default DOMService;
+  /**
+   * static method toSettings - converts attributes NamedNodeMap
+   * to specific object.
+   *
+   * @static
+   * @param {NamedNodeMap} attributes to convert
+   * @param {IParams} defaultParams for setting if some of an attribute is missed
+   * @returns {IParams}
+   */
+  public static toParams(
+    attributes: NamedNodeMap,
+    defaultParams?: IParams
+  ): IParams {
+    const params = {},
+      attrs = [].slice
+      .call(attributes)
+      .filter((attr) => attr.name !== 'class');
+
+    attrs.forEach((attr) => {
+      const key = DOMService.hyphenToCamelCase(attr.name);
+
+      params[key] = defaultTo(Number(attr.value), attr.value);
+    });
+
+    return defaults(params, defaultParams);
+  }
+
+  public static hyphenToCamelCase(hyphen) {
+    return hyphen
+      .replace(/[.*+?^${}()|[\]\\]/g, '')
+      .replace(/-([a-z])/g, (match) => match[1].toUpperCase());
+  }
+}
