@@ -265,11 +265,18 @@ describe('DOMService: Tests', () => {
       });
     });
 
-    describe('when passed correct incorrect array presentation', () => {
-      describe('when array format is incorrect', () => {
-        it('should return undefined', () => {
-          expect(DOMService.parseAttr('1?$, @2$, 3]')).toBeUndefined();
+    describe('when passed string with symbols', () => {
+      describe('when string is array like', () => {
+        it('should return string', () => {
+          expect(DOMService.parseAttr('1?$, @2$, 3]')).toEqual('1?$, @2$, 3]');
         });
+      });
+    });
+
+    describe('when passed correct array of strings', () => {
+      it('should return array of strings', () => {
+        expect(DOMService.parseAttr('["some", "any", "who"]'))
+          .toEqual(['some', 'any', 'who']);
       });
     });
   });

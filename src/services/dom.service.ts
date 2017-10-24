@@ -1,15 +1,15 @@
 import { defaults, defaultTo } from 'lodash';
 
-export interface IParams {
-  [key: string]: string | number | Array<string | number>;
-}
+export type TParsedValue = string | number | Array<string | number>;
 
-export type TParsedValue = string | number | number[];
+export interface IParams {
+  [key: string]: TParsedValue;
+}
 
 export default class DOMService {
   public static SVG_ELEMENT_NS = 'http://www.w3.org/2000/svg';
   public static ESCAPED_SYMBOLS_REGEXP = /[.*+?^@±§`~/%$!{}()|\\]/g;
-  public static ARRAY_PRESENTATION_REGEXP = /^\[\d*(?:, *?\d+)*]$/g;
+  public static ARRAY_PRESENTATION_REGEXP = /^\[(\d|".*?")*(?:, *?(\d|".*?")+)*]$/g;
 
   /**
    * createShadowRoot - creates document fragment which
@@ -99,10 +99,15 @@ export default class DOMService {
     const escapedValue = attrValue.replace(DOMService.ESCAPED_SYMBOLS_REGEXP, ''),
       isEmpty = !escapedValue,
       isNumber = !isNaN(Number(escapedValue)),
-      isArray = DOMService.ARRAY_PRESENTATION_REGEXP.test(escapedValue);
+      isArray = DOMService.ARRAY_PRESENTATION_REGEXP.test(escapedValue),
+      isString = !isNumber && !isArray;
 
     if (isEmpty) {
       return;
+    }
+
+    if (isString) {
+      return attrValue.replace(/["]/g, '');
     }
 
     if (isNumber) {
@@ -110,12 +115,13 @@ export default class DOMService {
     }
 
     if (isArray) {
-      const result = escapedValue.match(DOMService.ARRAY_PRESENTATION_REGEXP)
+      const result = escapedValue
+        .match(DOMService.ARRAY_PRESENTATION_REGEXP)
         .shift()
         .slice(1, -1)
         .split(',')
         .filter((item) => item.trim())
-        .map((item) => DOMService.parseAttr(item));
+        .map((item) => DOMService.parseAttr(item.trim()));
 
       if (result.length) {
         return result;
