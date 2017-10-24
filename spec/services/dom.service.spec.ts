@@ -4,7 +4,7 @@ import { createAttr } from '../helpers';
 
 declare const fixture: IFixture;
 
-describe('SVG', () => {
+describe('DOMService: Tests', () => {
 
   describe('#createShadowRoot()', () => {
     describe('when its called', () => {
@@ -202,6 +202,74 @@ describe('SVG', () => {
       it('should return camelCased name', () => {
         expect(DOMService.hyphenToCamelCase('some-value'))
           .toEqual('someValue');
+      });
+    });
+  });
+
+  describe('#parseAttr()', () => {
+    describe('when passed empty string', () => {
+      it('should return undefined', () => {
+        expect(DOMService.parseAttr('')).toBeUndefined();
+      });
+    });
+
+    describe('when passed incorrect string', () => {
+      it('should return undefined', () => {
+        expect(DOMService.parseAttr('?$@?@!$%^')).toBeUndefined();
+      });
+    });
+
+    describe('when passed positive numeric value', () => {
+      it('should return correct number', () => {
+        expect(DOMService.parseAttr('55')).toEqual(55);
+      });
+    });
+
+    describe('when passed negative numeric value', () => {
+      it('should return correct number', () => {
+        expect(DOMService.parseAttr('-55')).toEqual(-55);
+      });
+    });
+
+    describe('when passed zero', () => {
+      it('should return correct number', () => {
+        expect(DOMService.parseAttr('0')).toEqual(0);
+      });
+    });
+
+    describe('when passed empty array', () => {
+      it('should return undefined', () => {
+        expect(DOMService.parseAttr('[]')).toBeUndefined();
+      });
+    });
+
+    describe('when passed correct array presentation', () => {
+      it('should return correct parsed array', () => {
+        expect(DOMService.parseAttr('[1]')).toEqual([1]);
+      });
+    });
+
+    describe('when passed correct array presentation', () => {
+      describe('when there are several elements', () => {
+        it('should return correct parsed array', () => {
+          expect(DOMService.parseAttr('[1, 2, 3]')).toEqual([1, 2, 3]);
+        });
+      });
+    });
+
+    describe('when passed correct incorrect array presentation', () => {
+      describe('when there are several incorrect elements', () => {
+        it('should return correct parsed array', () => {
+          expect(DOMService.parseAttr('[1?$, @2$, 3]')).toEqual([1, 2, 3]);
+        });
+      });
+    });
+
+    describe('when passed correct incorrect array presentation', () => {
+      describe('when array format is incorrect', () => {
+        it('should return undefined', () => {
+          expect(DOMService.parseAttr('1?$, @2$, 3]')).toBeUndefined();
+        });
       });
     });
   });

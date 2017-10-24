@@ -26,6 +26,4 @@ export const DAMPING_EQ_A = 1;
 export const DAMPING_EQ_B = 1;
 export const DAMPING_EQ_C = 10;
 
-export const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
-
 export const GAUGE_VALUE_CHANGE = 'GAUGE_VALUE_CHANGE';

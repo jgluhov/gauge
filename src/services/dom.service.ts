@@ -1,11 +1,16 @@
 import { defaults, defaultTo } from 'lodash';
 
 export interface IParams {
-  [key: string]: string | number | number[];
+  [key: string]: string | number | Array<string | number>;
 }
+
+export type TParsedValue = string | number | number[];
 
 export default class DOMService {
   public static SVG_ELEMENT_NS = 'http://www.w3.org/2000/svg';
+  public static ESCAPED_SYMBOLS_REGEXP = /[.*+?^@±§`~/%$!{}()|\\]/g;
+  public static ARRAY_PRESENTATION_REGEXP = /^\[\d*(?:, *?\d+)*]$/g;
+
   /**
    * createShadowRoot - creates document fragment which
    * contains certain template ane style elements.
@@ -80,7 +85,41 @@ export default class DOMService {
 
   public static hyphenToCamelCase(hyphen) {
     return hyphen
-      .replace(/[.*+?^${}()|[\]\\]/g, '')
+      .replace(DOMService.ESCAPED_SYMBOLS_REGEXP, '')
       .replace(/-([a-z])/g, (match) => match[1].toUpperCase());
+  }
+
+  /**
+   * parse - method for parsing string value
+   * @static
+   * @param {string} attrValue literal string representation
+   * @returns {TParsedValue}
+   */
+  public static parseAttr(attrValue: string): TParsedValue  {
+    const escapedValue = attrValue.replace(DOMService.ESCAPED_SYMBOLS_REGEXP, ''),
+      isEmpty = !escapedValue,
+      isNumber = !isNaN(Number(escapedValue)),
+      isArray = DOMService.ARRAY_PRESENTATION_REGEXP.test(escapedValue);
+
+    if (isEmpty) {
+      return;
+    }
+
+    if (isNumber) {
+      return Number(escapedValue);
+    }
+
+    if (isArray) {
+      const result = escapedValue.match(DOMService.ARRAY_PRESENTATION_REGEXP)
+        .shift()
+        .slice(1, -1)
+        .split(',')
+        .filter((item) => item.trim())
+        .map((item) => DOMService.parseAttr(item));
+
+      if (result.length) {
+        return result;
+      }
+    }
   }
 }
