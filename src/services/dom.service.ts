@@ -8,7 +8,7 @@ export interface IParams {
 
 export default class DOMService {
   public static SVG_ELEMENT_NS = 'http://www.w3.org/2000/svg';
-  public static ESCAPED_SYMBOLS_REGEXP = /[.*+?^@±§`~/%$!{}()|\\]/g;
+  public static ESCAPED_SYMBOLS_REGEXP = /[*+?^@±§`~/%$!{}()|\\]/g;
   public static ARRAY_PRESENTATION_REGEXP = /^\[(\d|".*?")*(?:, *?(\d|".*?")+)*]$/g;
 
   /**
@@ -77,7 +77,7 @@ export default class DOMService {
     attrs.forEach((attr) => {
       const key = DOMService.hyphenToCamelCase(attr.name);
 
-      params[key] = defaultTo(Number(attr.value), attr.value);
+      params[key] = defaultTo(this.parseAttr(attr.value), attr.value);
     });
 
     return defaults(params, defaultParams);
@@ -93,12 +93,12 @@ export default class DOMService {
    * parse - method for parsing string value
    * @static
    * @param {string} attrValue literal string representation
-   * @returns {TParsedValue}
    */
-  public static parseAttr(attrValue: string): TParsedValue  {
+  public static parseAttr(attrValue: string)  {
     const escapedValue = attrValue.replace(DOMService.ESCAPED_SYMBOLS_REGEXP, ''),
       isEmpty = !escapedValue,
       isNumber = !isNaN(Number(escapedValue)),
+      isFloat = isNumber && escapedValue.includes('.'),
       isArray = DOMService.ARRAY_PRESENTATION_REGEXP.test(escapedValue),
       isString = !isNumber && !isArray;
 
@@ -111,7 +111,7 @@ export default class DOMService {
     }
 
     if (isNumber) {
-      return Number(escapedValue);
+      return isFloat ? parseFloat(escapedValue) : Number(escapedValue);
     }
 
     if (isArray) {

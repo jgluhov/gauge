@@ -42,7 +42,7 @@ class GaugeRenderService {
 
   public renderScale(params: IParams) {
     const slices = this.mathService.generateSlices(
-      params.startAngle, params.endAngle, SCALE_RATIO
+      params.startAngle, params.endAngle, params.scaleRatio
     );
 
     Array.from(this.queryService.gaugeScaleElements)

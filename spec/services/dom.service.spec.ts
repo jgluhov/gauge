@@ -225,6 +225,18 @@ describe('DOMService: Tests', () => {
       });
     });
 
+    fdescribe('when passed positive float number value', () => {
+      it('should return correct float number', () => {
+        expect(DOMService.parseAttr('5.5555')).toEqual(5.5555);
+      });
+    });
+
+    fdescribe('when passed negative float number value', () => {
+      it('should return correct float number', () => {
+        expect(DOMService.parseAttr('-5.5555')).toEqual(-5.5555);
+      });
+    });
+
     describe('when passed negative numeric value', () => {
       it('should return correct number', () => {
         expect(DOMService.parseAttr('-55')).toEqual(-55);
@@ -277,6 +289,28 @@ describe('DOMService: Tests', () => {
       it('should return array of strings', () => {
         expect(DOMService.parseAttr('["some", "any", "who"]'))
           .toEqual(['some', 'any', 'who']);
+      });
+    });
+
+    fdescribe('when passed correct array of number', () => {
+      beforeEach(() => {
+        this.array = DOMService.parseAttr('[8,26,100]');
+      });
+
+      it('should return an array', () => {
+        expect(Array.isArray(this.array)).toBeTruthy();
+      });
+
+      it('should return an array where first element is equal to 8', () => {
+        expect(this.array[0]).toEqual(8);
+      });
+
+      it('should return an array where second element is equal to 26', () => {
+        expect(this.array[1]).toEqual(26);
+      });
+
+      it('should return an array where third element is equal to 100', () => {
+        expect(this.array[2]).toEqual(100);
       });
     });
   });

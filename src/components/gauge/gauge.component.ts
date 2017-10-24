@@ -47,6 +47,7 @@ class Gauge extends HTMLElement {
   }
 
   private connectedCallback() {
+    console.log(DOMService.toParams(this.attributes, Gauge.defaultParams));
     this.render(DOMService.toParams(this.attributes, Gauge.defaultParams));
   }
 
@@ -135,8 +136,9 @@ class Gauge extends HTMLElement {
   static get defaultParams() {
     return {
       endAngle: SCALE_END_ANGLE,
+      scaleRatio: SCALE_RATIO,
       startAngle: SCALE_START_ANGLE,
-      value: SCALE_DEFAULT_VALUE,
+      value: SCALE_DEFAULT_VALUE
     };
   }
 }
