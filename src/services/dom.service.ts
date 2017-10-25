@@ -1,9 +1,7 @@
 import { defaults, defaultTo } from 'lodash';
 
-export type TParsedValue = string | number | Array<string | number>;
-
 export interface IParams {
-  [key: string]: TParsedValue;
+  [key: string]: number | number[];
 }
 
 export default class DOMService {
@@ -62,8 +60,7 @@ export default class DOMService {
    *
    * @static
    * @param {NamedNodeMap} attributes to convert
-   * @param {IParams} defaultParams for setting if some of an attribute is missed
-   * @returns {IParams}
+   * @param {IGaugeParams} defaultParams for setting if some of an attribute is missed
    */
   public static toParams(
     attributes: NamedNodeMap,

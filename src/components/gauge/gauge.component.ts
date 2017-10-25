@@ -10,9 +10,17 @@ import {
   TICKS_INDENT,
   TICKS_LENGTH
 } from '../../constants';
-import DOMService, {IParams} from '../../services/dom.service';
+
+import DOMService from '../../services/dom.service';
 import { attachStore } from '../../store';
 import GaugeRenderService from './gauge-render.service';
+
+export interface IGaugeParams {
+  endAngle: number;
+  scaleRatio: number[];
+  startAngle: number;
+  value: number;
+}
 
 class Gauge extends HTMLElement {
   private root: DocumentFragment;
@@ -47,8 +55,7 @@ class Gauge extends HTMLElement {
   }
 
   private connectedCallback() {
-    console.log(DOMService.toParams(this.attributes, Gauge.defaultParams));
-    this.render(DOMService.toParams(this.attributes, Gauge.defaultParams));
+    this.render((DOMService.toParams(this.attributes, Gauge.defaultParams)) as IGaugeParams);
   }
 
   private attributeChangedCallback(
@@ -61,7 +68,7 @@ class Gauge extends HTMLElement {
     }
   }
 
-  private render(params: IParams) {
+  private render(params: IGaugeParams) {
     this.renderService.renderScale(params);
 
     this.renderService.renderAxis();
@@ -133,7 +140,7 @@ class Gauge extends HTMLElement {
     `;
   }
 
-  static get defaultParams() {
+  static get defaultParams(): IGaugeParams {
     return {
       endAngle: SCALE_END_ANGLE,
       scaleRatio: SCALE_RATIO,

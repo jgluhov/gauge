@@ -17,6 +17,7 @@ import MathService from '../../services/math.service';
 import SVGService from '../../services/svg.service';
 import Slice from '../../structures/slice';
 import GaugeQueryService from './gauge-query.service';
+import {IGaugeParams} from "./gauge.component";
 
 class GaugeRenderService {
   private currentAngle: number = (
@@ -40,7 +41,7 @@ class GaugeRenderService {
     this.animationService = new AnimationService();
   }
 
-  public renderScale(params: IParams) {
+  public renderScale(params: IGaugeParams) {
     const slices = this.mathService.generateSlices(
       params.startAngle, params.endAngle, params.scaleRatio
     );
