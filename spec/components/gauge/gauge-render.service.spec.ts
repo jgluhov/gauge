@@ -7,10 +7,10 @@ describe('Gauge Render Service', () => {
     fixture.load('gauge.fixture.html');
 
     this.svgEl = fixture.el.firstChild.svgEl;
-    this.renderService = new GaugeRenderService(this.svgEl);
+    this.service = new GaugeRenderService(this.svgEl);
   });
 
   it('should have svg element property', () => {
-    expect(this.renderService.queryService.svgEl).toBeDefined();
+    expect(this.service.queryService.svgEl).toBeDefined();
   });
 });

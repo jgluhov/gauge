@@ -17,7 +17,7 @@ import MathService from '../../services/math.service';
 import SVGService from '../../services/svg.service';
 import Slice from '../../structures/slice';
 import GaugeQueryService from './gauge-query.service';
-import {IGaugeParams} from "./gauge.component";
+import {IGaugeParams} from './gauge.component';
 
 class GaugeRenderService {
   private currentAngle: number = (
@@ -52,9 +52,9 @@ class GaugeRenderService {
 
         el.setAttribute(
           'd', this.svgService.describeArc(
-            SCALE_CENTER_X,
-            SCALE_CENTER_Y,
-            SCALE_RADIUS,
+            this.queryService.centerX,
+            this.queryService.centerY - this.queryService.centerY / 3,
+            params.scaleRadius,
             slice.startAngle,
             slice.endAngle
           )
@@ -76,8 +76,8 @@ class GaugeRenderService {
     circleEl.setAttribute('r', HAND_RADIUS.toString());
 
     arrowEl.setAttribute('d', this.svgService.describeHand(
-      SCALE_CENTER_X,
-      SCALE_CENTER_Y,
+      this.queryService.centerX,
+      this.queryService.centerY - this.queryService.centerY / 3,
       SCALE_RADIUS,
       HAND_RADIUS,
       TICKS_INDENT,
@@ -110,8 +110,8 @@ class GaugeRenderService {
 
   private renderTicks() {
     const ticks = this.mathService.generateTicks(
-      SCALE_CENTER_X,
-      SCALE_CENTER_Y,
+      this.queryService.centerX,
+      this.queryService.centerY - this.queryService.centerY / 3,
       SCALE_START_ANGLE,
       SCALE_END_ANGLE,
       SCALE_RADIUS + TICKS_INDENT,
@@ -134,8 +134,8 @@ class GaugeRenderService {
   private renderTexts() {
     this.queryService.gaugeTextPathEl.setAttribute(
       'd', this.svgService.describeArc(
-        SCALE_CENTER_X,
-        SCALE_CENTER_Y,
+        this.queryService.centerX,
+        this.queryService.centerY - this.queryService.centerY / 3,
         SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
         SCALE_START_ANGLE,
         SCALE_END_ANGLE
@@ -143,8 +143,8 @@ class GaugeRenderService {
     );
 
     const texts = this.mathService.generateTexts(
-      SCALE_CENTER_X,
-      SCALE_CENTER_Y,
+      this.queryService.centerX,
+      this.queryService.centerY - this.queryService.centerY / 3,
       SCALE_RADIUS,
       SCALE_START_ANGLE,
       SCALE_END_ANGLE,

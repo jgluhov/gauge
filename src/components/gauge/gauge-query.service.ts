@@ -5,7 +5,7 @@ import {
 
 import DOMService from '../../services/dom.service';
 
-class Elements {
+class QueryService {
   constructor(public svgEl: SVGElement) {
   }
 
@@ -80,6 +80,14 @@ class Elements {
   public get gaugeHandGroupEl() {
     return this.svgEl.querySelector('#gauge-hand-group');
   }
+
+  public get centerX(): number {
+    return this.svgEl.clientWidth / 2;
+  }
+
+  public get centerY(): number {
+    return this.svgEl.clientHeight / 2;
+  }
 }
 
-export default Elements;
+export default QueryService;

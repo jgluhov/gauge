@@ -11,14 +11,17 @@ import {
   TICKS_LENGTH
 } from '../../constants';
 
-import DOMService from '../../services/dom.service';
+import DOMService, {IParams} from '../../services/dom.service';
 import { attachStore } from '../../store';
 import GaugeRenderService from './gauge-render.service';
 
-export interface IGaugeParams {
+export interface IGaugeParams extends IParams {
   endAngle: number;
   scaleRatio: number[];
+  scaleRadius: number;
   startAngle: number;
+  ticksIndent: number;
+  ticksCount: number;
   value: number;
 }
 
@@ -55,7 +58,7 @@ class Gauge extends HTMLElement {
   }
 
   private connectedCallback() {
-    this.render((DOMService.toParams(this.attributes, Gauge.defaultParams)) as IGaugeParams);
+    this.render((DOMService.toParams(this.attributes, Gauge.defaultParams) as IGaugeParams));
   }
 
   private attributeChangedCallback(
@@ -123,8 +126,8 @@ class Gauge extends HTMLElement {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 480 320"
         id="gauge"
-        width="100%"
-        height="100%"
+        width="480"
+        height="320"
       >
         <title>Gauge</title>
         <defs>
@@ -140,11 +143,14 @@ class Gauge extends HTMLElement {
     `;
   }
 
-  static get defaultParams(): IGaugeParams {
+  static get defaultParams(): IParams {
     return {
       endAngle: SCALE_END_ANGLE,
+      scaleRadius: SCALE_RADIUS,
       scaleRatio: SCALE_RATIO,
       startAngle: SCALE_START_ANGLE,
+      ticksCount: TICKS_COUNT,
+      ticksIndent: TICKS_INDENT,
       value: SCALE_DEFAULT_VALUE
     };
   }

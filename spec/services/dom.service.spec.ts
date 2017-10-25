@@ -225,13 +225,13 @@ describe('DOMService: Tests', () => {
       });
     });
 
-    fdescribe('when passed positive float number value', () => {
+    describe('when passed positive float number value', () => {
       it('should return correct float number', () => {
         expect(DOMService.parseAttr('5.5555')).toEqual(5.5555);
       });
     });
 
-    fdescribe('when passed negative float number value', () => {
+    describe('when passed negative float number value', () => {
       it('should return correct float number', () => {
         expect(DOMService.parseAttr('-5.5555')).toEqual(-5.5555);
       });
@@ -292,7 +292,7 @@ describe('DOMService: Tests', () => {
       });
     });
 
-    fdescribe('when passed correct array of number', () => {
+    describe('when passed correct array of number', () => {
       beforeEach(() => {
         this.array = DOMService.parseAttr('[8,26,100]');
       });
