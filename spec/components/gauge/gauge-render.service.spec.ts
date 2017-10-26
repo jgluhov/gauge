@@ -10,8 +10,4 @@ describe('Gauge Render Service', () => {
     this.svgEl = this.gaugeEl.svgEl;
     this.service = new GaugeRenderService(this.svgEl, this.gaugeEl.defaultParams);
   });
-
-  it('should have svg element property', () => {
-    expect(this.service.queryService.svgEl).toBeDefined();
-  });
 });

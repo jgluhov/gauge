@@ -1,12 +1,13 @@
-import {
-  SCALE_PATH_COUNT,
-  TICKS_COUNT
-} from '../../constants';
-
 import DOMService from '../../services/dom.service';
 import {IGaugeParams} from './gauge.component';
 
 class QueryService {
+  private GAUGE_SCALE_GROUP_ID = '#gauge-scale-group';
+  private GAUGE_LINES_GROUP_ID = '#gauge-lines-group';
+  private GAUGE_TEXTS_GROUP_ID = '#gauge-texts-group';
+  private GAUGE_TEXT_PATH_ID = '#gauge-text-path';
+  private GAUGE_HAND_GROUP_ID = '#gauge-hand-group';
+
   constructor(
     public svgEl: SVGElement,
     public params: IGaugeParams
@@ -15,7 +16,7 @@ class QueryService {
   public get gaugeScaleElements(): SVGElement[] {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
       this.gaugeScaleGroupEl.appendChild(
-        DOMService.createSVGElement('path', SCALE_PATH_COUNT)
+        DOMService.createSVGElement('path', this.params.scalePathCount)
       );
     }
 
@@ -25,7 +26,7 @@ class QueryService {
   public get gaugeLinesElements(): SVGElement[] {
     if (!this.gaugeLinesGroupEl.hasChildNodes()) {
       this.gaugeLinesGroupEl.appendChild(
-        DOMService.createSVGElement('line', TICKS_COUNT)
+        DOMService.createSVGElement('line', this.params.ticksCount)
       );
     }
 
@@ -35,7 +36,7 @@ class QueryService {
   public get gaugeTextsElements(): SVGElement[] {
     if (!this.gaugeTextsGroupEl.hasChildNodes()) {
       this.gaugeTextsGroupEl.appendChild(
-        DOMService.createSVGElement('text', TICKS_COUNT)
+        DOMService.createSVGElement('text', this.params.ticksCount)
       );
 
       Array.from(this.gaugeTextsGroupEl.children)
@@ -65,23 +66,23 @@ class QueryService {
   }
 
   public get gaugeScaleGroupEl() {
-    return this.svgEl.querySelector('#gauge-scale-group');
+    return this.svgEl.querySelector(this.GAUGE_SCALE_GROUP_ID);
   }
 
   public get gaugeLinesGroupEl() {
-    return this.svgEl.querySelector('#gauge-lines-group');
+    return this.svgEl.querySelector(this.GAUGE_LINES_GROUP_ID);
   }
 
   public get gaugeTextsGroupEl() {
-    return this.svgEl.querySelector('#gauge-texts-group');
+    return this.svgEl.querySelector(this.GAUGE_TEXTS_GROUP_ID);
   }
 
   public get gaugeTextPathEl(): SVGPathElement {
-    return this.svgEl.querySelector('#gauge-text-path') as SVGPathElement;
+    return this.svgEl.querySelector(this.GAUGE_TEXT_PATH_ID) as SVGPathElement;
   }
 
   public get gaugeHandGroupEl() {
-    return this.svgEl.querySelector('#gauge-hand-group');
+    return this.svgEl.querySelector(this.GAUGE_HAND_GROUP_ID);
   }
 
   public get centerX(): number {
@@ -92,8 +93,8 @@ class QueryService {
     return this.svgEl.clientHeight / 2;
   }
 
-  public get offsetY(): number {
-    return this.centerY / 3;
+  public get offsetCenterY(): number {
+    return this.centerY - 45;
   }
 }
 

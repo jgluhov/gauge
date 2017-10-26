@@ -2,6 +2,7 @@ import {
   HAND_RADIUS,
   SCALE_DEFAULT_VALUE,
   SCALE_END_ANGLE,
+  SCALE_PATH_COUNT,
   SCALE_RADIUS,
   SCALE_RATIO,
   SCALE_START_ANGLE,
@@ -17,6 +18,7 @@ import GaugeRenderService from './gauge-render.service';
 export interface IGaugeParams extends IParams {
   endAngle: number;
   handRadius: number;
+  scalePathCount: number;
   scaleRatio: number[];
   scaleRadius: number;
   startAngle: number;
@@ -155,6 +157,7 @@ class Gauge extends HTMLElement {
     return {
       endAngle: SCALE_END_ANGLE,
       handRadius: HAND_RADIUS,
+      scalePathCount: SCALE_PATH_COUNT,
       scaleRadius: SCALE_RADIUS,
       scaleRatio: SCALE_RATIO,
       startAngle: SCALE_START_ANGLE,
