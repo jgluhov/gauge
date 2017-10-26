@@ -4,10 +4,13 @@ import {
 } from '../../constants';
 
 import DOMService from '../../services/dom.service';
+import {IGaugeParams} from './gauge.component';
 
 class QueryService {
-  constructor(public svgEl: SVGElement) {
-  }
+  constructor(
+    public svgEl: SVGElement,
+    public params: IGaugeParams
+  ) {}
 
   public get gaugeScaleElements(): SVGElement[] {
     if (!this.gaugeScaleGroupEl.hasChildNodes()) {
@@ -87,6 +90,10 @@ class QueryService {
 
   public get centerY(): number {
     return this.svgEl.clientHeight / 2;
+  }
+
+  public get offsetY(): number {
+    return this.centerY / 3;
   }
 }
 

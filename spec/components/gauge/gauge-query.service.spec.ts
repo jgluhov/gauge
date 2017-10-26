@@ -7,9 +7,10 @@ describe('GaugeQueryService: Tests', () => {
   beforeEach(() => {
     fixture.load('gauge.fixture.html');
 
-    this.svgEl = fixture.el.firstChild.svgEl;
+    this.gaugeEl = fixture.el.firstChild;
+    this.svgEl = this.gaugeEl.svgEl;
     this.svgEl.name = 'hello';
-    this.service = new QueryService(this.svgEl);
+    this.service = new QueryService(this.svgEl, this.gaugeEl.defaultParams);
 
     this.sandbox = sandbox.create();
   });

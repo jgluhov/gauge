@@ -1,18 +1,4 @@
-import {
-  HAND_RADIUS,
-  SCALE_CENTER_X,
-  SCALE_CENTER_Y,
-  SCALE_END_ANGLE,
-  SCALE_RADIUS,
-  SCALE_RATIO,
-  SCALE_START_ANGLE,
-  TICKS_COUNT,
-  TICKS_INDENT,
-  TICKS_LENGTH
-} from '../../constants';
-
 import AnimationService from '../../services/animation.service';
-import DOMService, { IParams } from '../../services/dom.service';
 import MathService from '../../services/math.service';
 import SVGService from '../../services/svg.service';
 import Slice from '../../structures/slice';
@@ -20,22 +6,15 @@ import GaugeQueryService from './gauge-query.service';
 import {IGaugeParams} from './gauge.component';
 
 class GaugeRenderService {
-  private currentAngle: number = (
-    SCALE_END_ANGLE - (SCALE_END_ANGLE - SCALE_START_ANGLE) / 2
-  );
-
-  private centralAngle = MathService.calcCentralAngle(
-    SCALE_START_ANGLE,
-    SCALE_END_ANGLE
-  );
+  private currentAngle: number;
 
   private queryService: GaugeQueryService;
   private mathService: MathService;
   private svgService: SVGService;
   private animationService: AnimationService;
 
-  constructor(svgEl: SVGElement) {
-    this.queryService = new GaugeQueryService(svgEl);
+  constructor(svgEl: SVGElement, params: IGaugeParams) {
+    this.queryService = new GaugeQueryService(svgEl, params);
     this.mathService = new MathService();
     this.svgService = new SVGService();
     this.animationService = new AnimationService();
@@ -53,7 +32,7 @@ class GaugeRenderService {
         el.setAttribute(
           'd', this.svgService.describeArc(
             this.queryService.centerX,
-            this.queryService.centerY - this.queryService.centerY / 3,
+            this.queryService.centerY - this.queryService.offsetY,
             params.scaleRadius,
             slice.startAngle,
             slice.endAngle
@@ -62,93 +41,92 @@ class GaugeRenderService {
       });
   }
 
-  public renderAxis() {
-    this.renderTicks();
-    this.renderTexts();
+  public renderAxis(params: IGaugeParams) {
+    this.renderTicks(params);
+    this.renderTexts(params);
   }
 
-  public renderHand() {
+  public renderHand(params: IGaugeParams) {
     const circleEl = this.queryService.gaugeHandElements.shift(),
       arrowEl = this.queryService.gaugeHandElements.pop();
 
-    circleEl.setAttribute('cx', SCALE_CENTER_X.toString());
-    circleEl.setAttribute('cy', SCALE_CENTER_Y.toString());
-    circleEl.setAttribute('r', HAND_RADIUS.toString());
+    circleEl.setAttribute('cx', this.queryService.centerX.toString());
+    circleEl.setAttribute('cy', (this.queryService.centerY - this.queryService.offsetY).toString());
+    circleEl.setAttribute('r', params.handRadius.toString());
 
     arrowEl.setAttribute('d', this.svgService.describeHand(
       this.queryService.centerX,
-      this.queryService.centerY - this.queryService.centerY / 3,
-      SCALE_RADIUS,
-      HAND_RADIUS,
-      TICKS_INDENT,
-      TICKS_LENGTH
+      this.queryService.centerY - this.queryService.offsetY,
+      params.scaleRadius,
+      params.handRadius,
+      params.ticksIndent,
+      params.ticksLength
     ));
   }
 
-  public rotateHand(value) {
+  public rotateHand(params: IGaugeParams) {
+    if (!this.currentAngle) {
+      this.setCurrentAngle(
+        params.endAngle - (params.endAngle - params.startAngle) / 2
+      );
+    }
+
+    const centralAngle = MathService.calcCentralAngle(
+      params.startAngle,
+      params.endAngle
+    );
+
     const slice = new Slice(
       this.currentAngle,
-      SCALE_END_ANGLE - MathService.calcRatio(
-        this.centralAngle,
-        value
+      params.startAngle - MathService.calcRatio(
+        centralAngle,
+        params.value
       ));
 
     this.animateHand(slice);
   }
 
-  private animateHand(slice) {
-    this.animationService.animateHand(
-      (rotateAngle) => {
-        this.queryService.arrowEl.setAttribute('transform',
-          SVGService.describeRotation(rotateAngle)
-        );
-      },
-      slice,
-      this.setCurrentAngle
-    );
-  }
-
-  private renderTicks() {
+  private renderTicks(params: IGaugeParams) {
     const ticks = this.mathService.generateTicks(
       this.queryService.centerX,
-      this.queryService.centerY - this.queryService.centerY / 3,
-      SCALE_START_ANGLE,
-      SCALE_END_ANGLE,
-      SCALE_RADIUS + TICKS_INDENT,
-      TICKS_COUNT
+      this.queryService.centerY - this.queryService.offsetY,
+      params.startAngle,
+      params.endAngle,
+      params.scaleRadius + params.ticksIndent,
+      params.ticksCount
     );
 
     Array.from(this.queryService.gaugeLinesElements)
       .forEach((el) => {
-        const attr = el.setAttribute.bind(el),
-          tick = ticks.next().value;
+          const attr = el.setAttribute.bind(el),
+            tick = ticks.next().value;
 
-        attr('x1', tick.p1.x);
-        attr('y1', tick.p1.y);
-        attr('x2', tick.p2.x);
-        attr('y2', tick.p2.y);
-      }
-    );
+          attr('x1', tick.p1.x);
+          attr('y1', tick.p1.y);
+          attr('x2', tick.p2.x);
+          attr('y2', tick.p2.y);
+        }
+      );
   }
 
-  private renderTexts() {
+  private renderTexts(params: IGaugeParams) {
     this.queryService.gaugeTextPathEl.setAttribute(
       'd', this.svgService.describeArc(
         this.queryService.centerX,
-        this.queryService.centerY - this.queryService.centerY / 3,
-        SCALE_RADIUS + (2 * TICKS_INDENT) + TICKS_LENGTH,
-        SCALE_START_ANGLE,
-        SCALE_END_ANGLE
+        this.queryService.centerY - this.queryService.offsetY,
+        params.scaleRadius + (2 * params.ticksIndent) + params.ticksLength,
+        params.startAngle,
+        params.endAngle
       )
     );
 
     const texts = this.mathService.generateTexts(
       this.queryService.centerX,
-      this.queryService.centerY - this.queryService.centerY / 3,
-      SCALE_RADIUS,
-      SCALE_START_ANGLE,
-      SCALE_END_ANGLE,
-      TICKS_COUNT,
+      this.queryService.centerY - this.queryService.offsetY,
+      params.scaleRadius,
+      params.startAngle,
+      params.endAngle,
+      params.ticksCount,
       this.queryService.gaugeTextPathEl.getTotalLength()
     );
 
@@ -168,6 +146,18 @@ class GaugeRenderService {
         textPathEl.setAttribute('href', '#gauge-text-path');
         textPathEl.textContent = text.content;
       });
+  }
+
+  private animateHand(slice) {
+    this.animationService.animateHand(
+      (rotateAngle) => {
+        this.queryService.arrowEl.setAttribute('transform',
+          SVGService.describeRotation(rotateAngle)
+        );
+      },
+      slice,
+      this.setCurrentAngle
+    );
   }
 
   private setCurrentAngle = (angle) => {

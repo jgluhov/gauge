@@ -1,7 +1,6 @@
 import {
   HAND_RADIUS,
-  SCALE_CENTER_X,
-  SCALE_CENTER_Y, SCALE_DEFAULT_VALUE,
+  SCALE_DEFAULT_VALUE,
   SCALE_END_ANGLE,
   SCALE_RADIUS,
   SCALE_RATIO,
@@ -17,15 +16,18 @@ import GaugeRenderService from './gauge-render.service';
 
 export interface IGaugeParams extends IParams {
   endAngle: number;
+  handRadius: number;
   scaleRatio: number[];
   scaleRadius: number;
   startAngle: number;
   ticksIndent: number;
   ticksCount: number;
+  ticksLength: number;
   value: number;
 }
 
 class Gauge extends HTMLElement {
+  private params: IGaugeParams;
   private root: DocumentFragment;
   private svgEl: SVGElement;
   private renderService: GaugeRenderService;
@@ -51,14 +53,16 @@ class Gauge extends HTMLElement {
       Gauge.template
     );
 
+    this.params = this.readAttr();
     this.svgEl = this.root.querySelector('svg');
-    this.renderService = new GaugeRenderService(this.svgEl);
+
+    this.renderService = new GaugeRenderService(this.svgEl, this.params);
 
     shadow.appendChild(this.root);
   }
 
   private connectedCallback() {
-    this.render((DOMService.toParams(this.attributes, Gauge.defaultParams) as IGaugeParams));
+    this.render(this.params);
   }
 
   private attributeChangedCallback(
@@ -67,16 +71,20 @@ class Gauge extends HTMLElement {
     newValue: string
   ) {
     if (attr === 'value') {
-      this.renderService.rotateHand(Number(newValue));
+      this.renderService.rotateHand(this.readAttr());
     }
+  }
+
+  private readAttr() {
+    return DOMService.toParams(this.attributes, Gauge.defaultParams) as IGaugeParams;
   }
 
   private render(params: IGaugeParams) {
     this.renderService.renderScale(params);
 
-    this.renderService.renderAxis();
+    this.renderService.renderAxis(params);
 
-    this.renderService.renderHand();
+    this.renderService.renderHand(params);
   }
 
   static get style() {
@@ -146,11 +154,13 @@ class Gauge extends HTMLElement {
   static get defaultParams(): IParams {
     return {
       endAngle: SCALE_END_ANGLE,
+      handRadius: HAND_RADIUS,
       scaleRadius: SCALE_RADIUS,
       scaleRatio: SCALE_RATIO,
       startAngle: SCALE_START_ANGLE,
       ticksCount: TICKS_COUNT,
       ticksIndent: TICKS_INDENT,
+      ticksLength: TICKS_LENGTH,
       value: SCALE_DEFAULT_VALUE
     };
   }
