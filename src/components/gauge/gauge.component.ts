@@ -36,7 +36,8 @@ class Gauge extends HTMLElement {
 
   static get observedAttributes(): string[] {
     return [
-      'value'
+      'value',
+      'start-angle'
     ];
   }
 
@@ -67,14 +68,11 @@ class Gauge extends HTMLElement {
     this.render(this.params);
   }
 
-  private attributeChangedCallback(
-    attr: string,
-    oldValue: string,
-    newValue: string
-  ) {
-    if (attr === 'value') {
-      this.renderService.rotateHand(this.readAttr());
-    }
+  private attributeChangedCallback(attr: string) {
+    this.params = this.readAttr();
+
+    this.render(this.params);
+    this.renderService.rotateHand(this.params);
   }
 
   private readAttr() {
@@ -83,9 +81,7 @@ class Gauge extends HTMLElement {
 
   private render(params: IGaugeParams) {
     this.renderService.renderScale(params);
-
     this.renderService.renderAxis(params);
-
     this.renderService.renderHand(params);
   }
 
